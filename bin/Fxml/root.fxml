@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<AnchorPane fx:id="mainPane" xmlns:fx="http://javafx.com/fxml"
+	prefHeight="194.0" prefWidth="300.0" fx:controller="J_R_C.JOGL.BaseGame.LoginController">
+	<children>
+		<Label id="welcome-text" layoutX="40.0" layoutY="14.0" text="Welcome" />
+		<Label layoutX="42.0" layoutY="80.0" text="ID" />
+		<Label layoutX="42.0" layoutY="118.0" text="PASSWORD" />
+		<TextField fx:id="txtID" layoutX="120.0" layoutY="76.0" />
+		<PasswordField fx:id="txtPassWord" layoutX="120.0"
+			layoutY="114.0" />
+		<Button fx:id="btnLogin" layoutX="77.0" layoutY="158.0"
+			styleClass="button" text="연결중" />
+		<Button fx:id="btnCancel" layoutX="144.0" layoutY="158.0"
+			styleClass="button" text="취소" />
+		<Button fx:id="btnNewClient" layoutX="199.0" layoutY="158.0"
+			styleClass="button" text="가입" />
+
+	</children>
+</AnchorPane>

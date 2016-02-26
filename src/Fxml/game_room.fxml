@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.layout.StackPane?>
+
+<AnchorPane fx:id="mainPane" xmlns:fx="http://javafx.com/fxml"
+	prefHeight="480" prefWidth="480" fx:controller="J_R_C.JOGL.BaseGame.GameRoomController">
+	<children>
+
+		<Label fx:id="lbRoomName" layoutX="20.0" layoutY="20.0" text="방 이름" />
+
+		<Label fx:id="lbMaximumMember" layoutX="20.0" layoutY="50.0"
+			text="참여 정원" />
+
+		<Label fx:id="lbGameStyle" layoutX="20.0" layoutY="80.0" text="게임 스타일" />
+
+		<Label fx:id="lbPlayerTurnText" layoutX="20.0" layoutY="240.0"
+			text="Your Block" />
+
+		<ImageView fx:id="imageGameMainView" layoutX="20" layoutY="260"
+			fitHeight="30" fitWidth="30" pickOnBounds="true" preserveRatio="true" />
+
+		<Label fx:id="lbCatchmePlayCount" layoutX="55.0" layoutY="260.0"
+			text=" " />
+
+		<Button fx:id="btnStartCancel" layoutX="20.0" layoutY="140.0"
+			styleClass="button" text="시작" />
+		<Button fx:id="btnCancel" layoutX="20.0" layoutY="170.0"
+			styleClass="button" text="퇴장" />
+
+
+		<Label fx:id="lbPlayerTurnText" layoutX="20.0" layoutY="200.0"
+			text="Player Turn" />
+		<Label fx:id="lbPlayerTurn" layoutX="20.0" layoutY="220.0" text="" />
+
+
+		<TextArea fx:id="cheatingTextArea" layoutX="20" layoutY="315"
+			editable="false" prefWidth="440" prefHeight="120" />
+
+		<TextField fx:id="cheatingTextEdit" layoutX="20" layoutY="445"
+			editable="true" prefWidth="390" prefHeight="25" />
+
+		<Button fx:id="btnSendMessage" layoutX="420.0" layoutY="445.0"
+			styleClass="button" text="전송" />
+
+		<AnchorPane fx:id="anchorPane" layoutX="100.0" layoutY="14.0"
+			prefWidth="360" prefHeight="290">
+			<children>
+
+			</children>
+		</AnchorPane>
+
+	</children>
+</AnchorPane>

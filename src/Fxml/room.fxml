@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+
+<AnchorPane fx:id="mainPane" xmlns:fx="http://javafx.com/fxml" prefHeight="410"
+	prefWidth="480" fx:controller="J_R_C.JOGL.BaseGame.WaitingRoomsManagerController">
+	<children>
+		<ListView fx:id="roomListView" layoutX="240.0" layoutY="14.0"
+			editable="false" prefWidth="220" prefHeight="210" orientation="VERTICAL" />
+		<Label layoutX="20.0" layoutY="20.0" text="방 이름" />
+		<Label fx:id="lbRoomName" layoutX="140.0" layoutY="20.0" text=" " />
+
+		<Label layoutX="20.0" layoutY="50.0" text="참여 정원" />
+		<Label fx:id="lbMaximumMember" layoutX="140.0" layoutY="50.0"
+			text=" " />
+
+		<Label layoutX="20.0" layoutY="80.0" text="참여 인원" />
+		<Label fx:id="lbEnterMemeber" layoutX="140.0" layoutY="80.0"
+			text=" " />
+
+		<Label layoutX="20.0" layoutY="110.0" text="게임 스타일" />
+		<Label fx:id="lbGameStyle" layoutX="140.0" layoutY="110.0" text=" " />
+
+		<ImageView fx:id="imageGameMainView" layoutX="20" layoutY="130"
+			fitHeight="100" fitWidth="100" pickOnBounds="true" preserveRatio="true" />
+
+
+
+		<Button fx:id="btnEnter" layoutX="140.0" layoutY="140.0"
+			styleClass="button" text="입장" />
+		<Button layoutX="140.0" layoutY="170.0"
+			styleClass="button" text="방 만들기" onAction="#handleCustom" />
+		<Button fx:id="btnCancel" layoutX="140.0" layoutY="200.0"
+			styleClass="button" text="처음 화면으로" />
+
+		<TextArea fx:id="cheatingTextArea" layoutX="20" layoutY="240"
+			editable="false" prefWidth="440" prefHeight="120" />
+
+		<TextField fx:id="cheatingTextEdit" layoutX="20" layoutY="370"
+			editable="true" prefWidth="390" prefHeight="25" />
+
+		<Button fx:id="btnSendMessage" layoutX="420.0" layoutY="370.0"
+			styleClass="button" text="전송" />
+	</children>
+</AnchorPane>

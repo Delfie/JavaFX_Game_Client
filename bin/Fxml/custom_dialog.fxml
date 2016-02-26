@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.ComboBox?>
+
+<AnchorPane prefHeight="150.0" prefWidth="400.0"
+	xmlns:fx="http://javafx.com/fxml">
+	<children>
+		<ImageView id="imgViewGame" fitHeight="70" fitWidth="70"
+			layoutX="270" layoutY="15" preserveRatio="true" />
+		<Button id="btnOk" layoutX="280.0" layoutY="104.0" text="생성" />
+		<Button id="btnCancel" layoutX="330.0" layoutY="104.0" text="취소" />
+
+		<Label layoutX="20.0" layoutY="20.0" text="방 이름" />
+		<TextField id = "textEditRoomName" layoutX="95.0" layoutY="17.0" />
+
+		<Label layoutX="20.0" layoutY="50.0" text="참여 정원" />
+		<TextField id = "textEditClientEnterNumber" layoutX="95.0" layoutY="47.0" />
+
+		<Label layoutX="20.0" layoutY="80.0" text="게임 스타일" />
+		<ComboBox id="gameStyleComboBox" layoutX="95.0" layoutY="77.0" />
+	</children>
+</AnchorPane>

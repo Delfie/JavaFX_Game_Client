@@ -330,6 +330,21 @@ public class ServerClient {
                             ((GameRoomController)gameRoomController)
                                     .setCatchmePlayCount(splitPacket);
                             break;
+                            
+                        case Settings._ANSWER_METEORGAME_SET_CLIECK_EVENT:
+                            ((GameRoomController)gameRoomController)
+                            .setMeteorGamePlayerPosition(splitPacket);
+                            break;
+                            
+                        case Settings._ANSWER_METEORGAME_INIT_GAME_PLAY:
+                            ((GameRoomController)gameRoomController)
+                            .initMeteorGamePlayerGamePosition(splitPacket);
+                            break;
+                            
+                        case Settings._ANSWER_METEORGAME_REINIT_GAME_PLAY:
+                            ((GameRoomController)gameRoomController)
+                            .initREMeteorGamePlayerGamePosition(splitPacket);
+                            break;
                         // process unExist protocols
                         default:
                             System.err.println("[" + protocol

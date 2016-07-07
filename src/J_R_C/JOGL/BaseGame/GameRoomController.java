@@ -4,11 +4,13 @@ package J_R_C.JOGL.BaseGame;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,6 +20,8 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -27,6 +31,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
@@ -37,7 +44,7 @@ import javafx.stage.Stage;
  * @copyRight of KJW all Rights Reserved and follow the MIT license
  */
 public class GameRoomController implements Initializable {
-    
+
     private final int SENDINGMESSAGEMAXLENGTH = 70;
 
     /**
@@ -193,6 +200,14 @@ public class GameRoomController implements Initializable {
      */
     private int nPossiblePlayNumber;
 
+    private AnimationTimer spriteAnimationTimer;
+
+    private ArrayList<String> input = new ArrayList<String>();
+
+    private ArrayList<Player> players = new ArrayList<Player>();
+
+    // = new GraphicsContextSprite("box.png", 100, 100);
+
     /*
      * (non-Javadoc)
      * @see javafx.fxml.Initializable#initialize(java.net.URL,
@@ -209,7 +224,6 @@ public class GameRoomController implements Initializable {
         anchorPane.setMaxSize(GameViewMaximumWidth, GameViewMaximumHeight);
         // register click event listener
         anchorPane.setOnMouseClicked(e -> gameWindowsClickedEvent(e));
-
         // register click event listener
         btnCancel.setOnAction(e -> handleBtnCancel(e));
         btnStartCancel.setOnAction(e -> handlebtnStartStop(e));
@@ -222,7 +236,7 @@ public class GameRoomController implements Initializable {
         // set the variable about cheatingTextArea
         cheatingTextEdit.addEventFilter(KeyEvent.KEY_TYPED,
                 message_text_Validation(SENDINGMESSAGEMAXLENGTH));
-        
+
         cheatingTextArea.setEditable(false);
         cheatingTextArea
                 .setStyle("-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;-fx-background-insets: 0, 1, 2;-fx-background-radius: 5, 4, 3;");
@@ -251,12 +265,13 @@ public class GameRoomController implements Initializable {
                     @Override
                     public void run() {
                         /*
-                        if (cheatingTextEdit.getText().length() > 29) {
-                            Platform.runLater(() -> handlePopup("25글자가 한계 입니다."));
-                            cheatingTextEdit.setText(cheatingTextEdit.getText(0, 29));
-                        }
-                        */
-                        
+                         * if (cheatingTextEdit.getText().length() > 29) {
+                         * Platform.runLater(() ->
+                         * handlePopup("25글자가 한계 입니다."));
+                         * cheatingTextEdit.setText(cheatingTextEdit.getText(0,
+                         * 29)); }
+                         */
+
                         if (client.getIsServerConnected() == ServerClient.SERVERCONNECTIONFAIL) {
                             terminate();
                             handlePopup("서버와의 연결이 끊겼습니다.");
@@ -282,6 +297,9 @@ public class GameRoomController implements Initializable {
      * LoginSecene)
      */
     public void terminate() {
+        if (getnGameType() == Settings.nGameMeteorGame)
+            spriteAnimationTimer.stop();
+
         Stage stage = (Stage)primaryStage.getScene().getWindow();
 
         try {
@@ -439,6 +457,81 @@ public class GameRoomController implements Initializable {
         anchorPane.getChildren().add(imageview);
     }
 
+    private void drawSpriteImageView() {
+        client.sendPacket(3, Settings._REQUEST_METEORGAME_INIT_GAME_PLAY + "", getsRoomName(),
+                client.getClientName());
+
+        // Mapping 사영 시키는 함수 만들것.
+        Canvas canvas = new Canvas(360, 280);
+
+        anchorPane.getChildren().add(canvas);
+        canvas.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
+            public void handle(KeyEvent e) {
+                String code = e.getCode().toString();
+                if (!input.contains(code))
+                    input.add(code);
+            }
+        });
+
+        canvas.getScene().setOnKeyReleased(new EventHandler<KeyEvent>() {
+            public void handle(KeyEvent e) {
+                String code = e.getCode().toString();
+                input.remove(code);
+            }
+        });
+
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        /*
+         * player.setPosition(160, 240); player.setImageSize(30, 30);
+         */
+
+        anchorPane.getScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent e) {
+                client.sendPacket(4, Settings._REQUEST_METEORGAME_SET_CLIECK_EVENT + "",
+                        getsRoomName(), e.getX() - 100 + "", e.getY() - 14 + "");
+
+            }
+        });
+
+        GraphicsContextSprite background = new GraphicsContextSprite("background.png", 320, 480);
+
+        spriteAnimationTimer = new AnimationTimer() {
+
+            Long lastNanoTime = new Long(System.nanoTime());
+
+            public void handle(long currentNanoTime) {
+                // calculate time since last update.
+                double elapsedTime = (currentNanoTime - lastNanoTime) / 1000000000.0;
+                lastNanoTime = currentNanoTime;
+
+                // game logic
+
+                /*
+                 * player.setVelocity(0, 0); if (input.contains("LEFT"))
+                 * player.addVelocity(-50, 0); if (input.contains("RIGHT"))
+                 * player.addVelocity(50, 0); if (input.contains("UP"))
+                 * player.addVelocity(0, -50); if (input.contains("DOWN"))
+                 * player.addVelocity(0, 50); player.update(elapsedTime);
+                 */
+
+                // collision detection
+
+                // render
+
+                gc.clearRect(0, 0, Settings.fSPRITEGAMEWIDTH, Settings.fSPRITEGAMEHEIGHT);
+                background.render(gc, 180, 140, 360, 280);
+
+                for (int i = 0; i < players.size(); i++)
+                    players.get(i).render(gc);
+                /* player.render(gc); */
+            }
+        };
+
+        spriteAnimationTimer.start();
+
+    }
+
     /**
      * init drawing about TicTacToc
      */
@@ -481,6 +574,16 @@ public class GameRoomController implements Initializable {
 
             case BACK_SPACE:
                 break;
+
+            case LEFT:
+            case RIGHT:
+            case UP:
+            case DOWN:
+                String code = e.getCode().toString();
+                if (!input.contains(code))
+                    input.add(code);
+                break;
+
             default:
                 e.consume();
                 break;
@@ -560,6 +663,8 @@ public class GameRoomController implements Initializable {
      * if client out the room successfully, scene change to waitingroom
      */
     public void outOfTheRoom() {
+        if (getnGameType() == Settings.nGameMeteorGame)
+            spriteAnimationTimer.stop();
         Stage stage = (Stage)btnCancel.getScene().getWindow();
 
         Platform.runLater(() -> {
@@ -773,6 +878,55 @@ public class GameRoomController implements Initializable {
      */
     public void setCatchmePlayCount(String[] packet) {
         Platform.runLater(() -> displayText("Play count Set Number :" + packet[1]));
+    }
+
+    public void setMeteorGamePlayerPosition(String[] packet) {
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getsPlayerName().equals(packet[1]))
+                players.get(i).setPosition(Double.parseDouble(packet[2]),
+                        Double.parseDouble(packet[3]));
+        }
+
+    }
+
+    public void initMeteorGamePlayerGamePosition(String[] packet) {
+        Player player = new Player("box.png", 100, 100);
+        player.setPosition(Double.parseDouble(packet[2]), Double.parseDouble(packet[3]));
+        player.setImageSize(30, 30);
+        player.setsPlayerName(packet[1]);
+        players.add(player);
+
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getsPlayerName().equals(client.getClientName()))
+                client.sendPacket(6, Settings._REQUEST_METEORGAME_REINIT_GAME_PLAY + "",
+                        getsRoomName(), packet[1], client.getClientName(), players.get(i)
+                                .getPositionX() + "", players.get(i).getPositionY() + "");
+
+        }
+
+    }
+
+    public void initREMeteorGamePlayerGamePosition(String[] packet) {
+        boolean isExisted = false;
+
+        if (client.getClientName().equals(packet[1]))
+            if (!client.getClientName().equals(packet[2])) {
+                for (int i = 0; i < players.size(); i++) {
+                    if (players.get(i).getsPlayerName().equals(packet[2])) {
+                        isExisted = true;
+                        break;
+                    }
+                }
+
+                if (isExisted == false) {
+                    Player player = new Player("box.png", 100, 100);
+                    player.setPosition(Double.parseDouble(packet[3]), Double.parseDouble(packet[4]));
+                    player.setImageSize(30, 30);
+                    player.setsPlayerName(packet[2]);
+                    players.add(player);
+                }
+            }
+
     }
 
     /**
@@ -1060,6 +1214,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * get possible Play number (catchMe) integer
+     * 
      * @return
      */
     public int getnPossiblePlayNumber() {
@@ -1068,6 +1223,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * set possible play number (catchMe)
+     * 
      * @param nPossiblePlayNumber
      */
     public void setnPossiblePlayNumber(int nPossiblePlayNumber) {
@@ -1076,6 +1232,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * set The Room Message on the cheatingTextArea
+     * 
      * @param packet
      */
     public void setTheRoomMessage(String[] packet) {
@@ -1083,7 +1240,9 @@ public class GameRoomController implements Initializable {
     }
 
     /**
-     * if new member enter the room, server notify that new memeber enter the this game room 
+     * if new member enter the room, server notify that new memeber enter the
+     * this game room
+     * 
      * @param packet
      */
     public void notificationNewRoomMemeberMessage(String[] packet) {
@@ -1092,6 +1251,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * get room name string
+     * 
      * @return
      */
     public String getsRoomName() {
@@ -1101,6 +1261,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * set room name( init time show the room name)
+     * 
      * @param sRoomName
      */
     public void setsRoomName(String sRoomName) {
@@ -1112,6 +1273,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * get total Client Number integer
+     * 
      * @return
      */
     public int getnToTalClient() {
@@ -1120,6 +1282,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * set total Client Number
+     * 
      * @param nToTalClient
      */
     public void setnToTalClient(int nToTalClient) {
@@ -1131,6 +1294,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * get Game Type integer
+     * 
      * @return
      */
     public int getnGameType() {
@@ -1139,6 +1303,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * set the Game type and draw the game iamge
+     * 
      * @param nGameType
      */
     public void setnGameType(int nGameType) {
@@ -1155,6 +1320,9 @@ public class GameRoomController implements Initializable {
             drawShapesTictactoc();
 
             lbPlayerTurn.setVisible(true);
+        } else if (getnGameType() == Settings.nGameMeteorGame) {
+            lbGameStyle.setText(Settings.sGameStringStyleMeteorGame);
+            drawSpriteImageView();
         }
 
         client.sendPacket(2, Settings._REQUEST_GAME_ROOM_MEMEBER_NUMBER + "", sRoomName);
@@ -1162,6 +1330,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * set the entered room member number
+     * 
      * @param packet
      */
     public void setTheGameRoomMemberNumber(String[] packet) {
@@ -1172,7 +1341,7 @@ public class GameRoomController implements Initializable {
             lbMaximumMember.setText(_string);
         });
     }
-    
+
     /**
      * check the max message length
      * 
@@ -1195,6 +1364,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * get the game start state boolean
+     * 
      * @return
      */
     public boolean isGameStart() {
@@ -1203,6 +1373,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * set the game state state boolean
+     * 
      * @param isGameStart
      */
     public void setGameStart(boolean isGameStart) {
@@ -1211,6 +1382,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * get the game token boolean
+     * 
      * @return
      */
     public boolean isPlayToken() {
@@ -1219,6 +1391,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * set the game token
+     * 
      * @param isPlayToken
      */
     public void setPlayToken(boolean isPlayToken) {
@@ -1227,6 +1400,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * get the catchMe item number
+     * 
      * @return
      */
     public int getnCatchmeItem() {
@@ -1235,6 +1409,7 @@ public class GameRoomController implements Initializable {
 
     /**
      * set the CatchMe Item number
+     * 
      * @param nCatchmeItem
      */
     public void setnCatchmeItem(int nCatchmeItem) {

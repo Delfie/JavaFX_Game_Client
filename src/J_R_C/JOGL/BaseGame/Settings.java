@@ -285,7 +285,52 @@ public class Settings {
      * Answer CatchMe User Click Count 54
      */
     public static final int _ANSWER_SET_THE_CATCHME_PLAY_COUNT = 0x00000036;
+    
+    /**
+     * Request Mobile login to server 55
+     */
+    public static final int _REQUEST_MOBILE_LOGIN = 0x00000037; 
+    
+    /**
+     * Request Mobile login to server 56
+     */
+    public static final int _REQUEST_MOBILE_MAKE_GAME_UNIVERSE = 0x00000038;
+    
+    /**
+     * Request Mobile login to server 57
+     */
+    public static final int _ANSWER_MOBILE_MAKE_GAME_UNIVERSE = 0x00000039;
+    
+    /**
+     * Request Client METEORGAME STONE SET CLICK EVENT 58
+     */
+    public static final int _REQUEST_METEORGAME_SET_CLIECK_EVENT = 0x0000003a;
+    
+    /**
+     * Answer Client METEORGAME STONE SET CLICK EVENT 59
+     */
+    public static final int _ANSWER_METEORGAME_SET_CLIECK_EVENT  = 0x0000003b;
 
+    /**
+     * Request Client METEORGAME STONE INIT GAME PLAY 60
+     */
+    public static final int _REQUEST_METEORGAME_INIT_GAME_PLAY  = 0x0000003c;
+    
+    /**
+     * Answer Client METEORGAME STONE INIT GAME PLAY 61
+     */
+    public static final int _ANSWER_METEORGAME_INIT_GAME_PLAY  = 0x0000003d;
+    
+    /**
+     * Request Client METEORGAME STONE REINIT GAME PLAY 62
+     */
+    public static final int _REQUEST_METEORGAME_REINIT_GAME_PLAY  = 0x0000003e;
+
+    /**
+     * Answer Client METEORGAME STONE REINIT GAME PLAY 63
+     */
+    public static final int _ANSWER_METEORGAME_REINIT_GAME_PLAY  = 0x0000003f;
+    
     // Asset Constant
 
     /**
@@ -329,7 +374,12 @@ public class Settings {
      * game String Constant TicTacToc
      */
     public static final String sGameStringStyleTicTacToc = "오목";
-
+    
+    /**
+     * game String Constant TicTacToc
+     */
+    public static final String sGameStringStyleMeteorGame = "운석게임";
+    
     /**
      * Game CatchMe Constant Count
      */
@@ -339,6 +389,11 @@ public class Settings {
      * Game TicTacToc Constant Count
      */
     public static final int nGameTicTacToc = 2;
+    
+    /**
+     * Game MeteorGame Constant Count
+     */
+    public static final int nGameMeteorGame = 3;
 
     /**
      * Game CatchMe Item Left Constant 0
@@ -439,6 +494,11 @@ public class Settings {
      * the Game Server Port Number
      */
     public static final int nConnectionServerPortNumber = 5001;
+    
+    public static final float fSPRITEGAMEWIDTH = 320;
+
+    public static final float fSPRITEGAMEHEIGHT = 480;
+
     
 
 }

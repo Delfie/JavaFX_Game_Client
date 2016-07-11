@@ -206,6 +206,8 @@ public class GameRoomController implements Initializable {
 
     private ArrayList<Player> players = new ArrayList<Player>();
 
+    private ArrayList<Player> asteroids = new ArrayList<Player>();
+
     // = new GraphicsContextSprite("box.png", 100, 100);
 
     /*
@@ -236,7 +238,6 @@ public class GameRoomController implements Initializable {
         // set the variable about cheatingTextArea
         cheatingTextEdit.addEventFilter(KeyEvent.KEY_TYPED,
                 message_text_Validation(SENDINGMESSAGEMAXLENGTH));
-
         cheatingTextArea.setEditable(false);
         cheatingTextArea
                 .setStyle("-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;-fx-background-insets: 0, 1, 2;-fx-background-radius: 5, 4, 3;");
@@ -520,10 +521,16 @@ public class GameRoomController implements Initializable {
                 // render
 
                 gc.clearRect(0, 0, Settings.fSPRITEGAMEWIDTH, Settings.fSPRITEGAMEHEIGHT);
-                background.render(gc, 180, 140, 360, 280);
+                background.render(gc, Settings.nGameAsteroidSceneWidth / 2,
+                        Settings.nGameAsteroidSceneHeight / 2, Settings.nGameAsteroidSceneWidth,
+                        Settings.nGameAsteroidSceneHeight);
 
                 for (int i = 0; i < players.size(); i++)
                     players.get(i).render(gc);
+                
+                for (int i = 0; i < asteroids.size(); i++)
+                asteroids.get(i).render(gc);
+                    
                 /* player.render(gc); */
             }
         };
@@ -663,8 +670,12 @@ public class GameRoomController implements Initializable {
      * if client out the room successfully, scene change to waitingroom
      */
     public void outOfTheRoom() {
-        if (getnGameType() == Settings.nGameMeteorGame)
+        if (getnGameType() == Settings.nGameMeteorGame) {
             spriteAnimationTimer.stop();
+            client.sendPacket(3, Settings._REQUEST_METEORGAME_OUT_OF_PLAYER + "", getsRoomName(),
+                    client.getClientName());
+
+        }
         Stage stage = (Stage)btnCancel.getScene().getWindow();
 
         Platform.runLater(() -> {
@@ -890,6 +901,9 @@ public class GameRoomController implements Initializable {
     }
 
     public void initMeteorGamePlayerGamePosition(String[] packet) {
+        if (Settings.ERRORCODE != checkPlayerInTheGame(packet[1]))
+            return;
+
         Player player = new Player("box.png", 100, 100);
         player.setPosition(Double.parseDouble(packet[2]), Double.parseDouble(packet[3]));
         player.setImageSize(30, 30);
@@ -904,6 +918,13 @@ public class GameRoomController implements Initializable {
 
         }
 
+    }
+
+    private int checkPlayerInTheGame(String name) {
+        for (int i = 0; i < players.size(); i++)
+            if (players.get(i).getsPlayerName().equals(name))
+                return i;
+        return Settings.ERRORCODE;
     }
 
     public void initREMeteorGamePlayerGamePosition(String[] packet) {
@@ -927,6 +948,18 @@ public class GameRoomController implements Initializable {
                 }
             }
 
+    }
+
+    public void outOfPlayerInMeteorGame(String[] packet) {
+        players.remove(checkPlayerInTheGame(packet[1]));
+    }
+
+    public void initMeteorGameWhenStartGame(String[] packet) {
+        Player asteroid = new Player("box.png", 0, 100, 100, 100);
+        asteroid.setPosition(Double.parseDouble(packet[1]), Double.parseDouble(packet[2]));
+        asteroid.setImageSize(5, 5);
+        asteroid.setsPlayerName("asteroid");
+        asteroids.add(asteroid);
     }
 
     /**

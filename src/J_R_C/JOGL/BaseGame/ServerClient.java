@@ -14,7 +14,7 @@ import javafx.fxml.Initializable;
 
 /**
  * @author KJW finish at 2016/ 02/ 15
- * @version 1.0.0v 
+ * @version 1.0.0v
  * @description this class Manage The server client
  * @copyRight of KJW all Rights Reserved and follow the MIT license
  */
@@ -330,21 +330,33 @@ public class ServerClient {
                             ((GameRoomController)gameRoomController)
                                     .setCatchmePlayCount(splitPacket);
                             break;
-                            
+
                         case Settings._ANSWER_METEORGAME_SET_CLIECK_EVENT:
                             ((GameRoomController)gameRoomController)
-                            .setMeteorGamePlayerPosition(splitPacket);
+                                    .setMeteorGamePlayerPosition(splitPacket);
                             break;
-                            
+
                         case Settings._ANSWER_METEORGAME_INIT_GAME_PLAY:
                             ((GameRoomController)gameRoomController)
-                            .initMeteorGamePlayerGamePosition(splitPacket);
+                                    .initMeteorGamePlayerGamePosition(splitPacket);
                             break;
-                            
+
                         case Settings._ANSWER_METEORGAME_REINIT_GAME_PLAY:
                             ((GameRoomController)gameRoomController)
-                            .initREMeteorGamePlayerGamePosition(splitPacket);
+                                    .initREMeteorGamePlayerGamePosition(splitPacket);
                             break;
+
+                        case Settings._ANSWER_METEORGAME_OUT_OF_PLAYER:
+                            if (!splitPacket[1].equals(getClientName()))
+                                ((GameRoomController)gameRoomController)
+                                        .outOfPlayerInMeteorGame(splitPacket);
+                            break;
+
+                        case Settings._ANSWER_METEORGAME_UNIVERSE_INIT:
+                            ((GameRoomController)gameRoomController)
+                                    .initMeteorGameWhenStartGame(splitPacket);
+                            break;
+
                         // process unExist protocols
                         default:
                             System.err.println("[" + protocol

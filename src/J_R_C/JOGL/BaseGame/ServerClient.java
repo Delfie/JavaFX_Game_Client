@@ -6,8 +6,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.codec.binary.Hex;
 
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
@@ -170,11 +176,12 @@ public class ServerClient {
                     throw new IOException();
                 }
                 String data = new String(byteArr, 0, readByteCount, "UTF-8");
+                
                 /*
                  * processing all packet using next method for splitting the
                  * packet
                  */
-                String[] multiplePackets = splitMultiplePacket(data);
+                String[] multiplePackets = splitMultiplePacket(decrypt(data));
 
                 for (int i = 0; i < multiplePackets.length; i++) {
 
@@ -188,7 +195,7 @@ public class ServerClient {
 
                     if (protocol != Settings._ANSWER_GAME_ROOM_LIST
                             && protocol != Settings._ANSWER_ROOM_MEMBER_NUMBER)
-                        System.out.println("receive the Packet " + data);
+                        System.out.println("receive the Packet " + decrypt(data));
 
                     switch (protocol) {
                     // if client exit the game room
@@ -470,7 +477,7 @@ public class ServerClient {
             @Override
             public void run() {
                 try {
-                    byte[] byteArr = data.getBytes("UTF-8");
+                    byte[] byteArr = encrypt(data).getBytes("UTF-8");
                     outputStream = socket.getOutputStream();
                     outputStream.write(byteArr);
                     outputStream.flush();
@@ -484,6 +491,37 @@ public class ServerClient {
         thread.setPriority(Thread.MAX_PRIORITY);
         thread.start();
     }
+    
+    public String encrypt(String message) throws Exception {
+
+        // use key coss2
+        SecretKeySpec skeySpec = new SecretKeySpec(Settings.sEncryptKey.getBytes(), "AES");
+
+        // Instantiate the cipher
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+
+        byte[] encrypted = cipher.doFinal(message.getBytes());
+        
+        return  Hex.encodeHexString(encrypted);
+        
+    }
+    
+    public String decrypt(String encrypted) throws Exception {
+
+        // use key coss2
+        SecretKeySpec skeySpec = new SecretKeySpec(Settings.sEncryptKey.getBytes(), "AES");
+
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+        
+        byte[] original = cipher.doFinal(Hex.decodeHex(encrypted.toCharArray()));
+        
+        String originalString = new String(original);
+        
+        return originalString;
+    }
+
 
     /**
      * if client connection's state is terminate, then this method is called

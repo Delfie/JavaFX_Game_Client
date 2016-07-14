@@ -166,7 +166,7 @@ public class ServerClient {
 
             try {
 
-                byte[] byteArr = new byte[100];
+                byte[] byteArr = new byte[Settings.nReceiveBufferSize];
                 InputStream inputStream = socket.getInputStream();
                 // 서버가 비정상적으로 종료했을 경우 IOException 발생
 
@@ -176,7 +176,7 @@ public class ServerClient {
                     throw new IOException();
                 }
                 String data = new String(byteArr, 0, readByteCount, "UTF-8");
-                
+
                 /*
                  * processing all packet using next method for splitting the
                  * packet
@@ -422,11 +422,12 @@ public class ServerClient {
      * @return
      */
     String[] splitProtocol(String packet) {
-
         int flag = packet.indexOf("/");
+        String subPacket = packet.substring(flag + 1, packet.length());
+        packet = packet.substring(flag + 1, packet.length());
 
-        String subPacket = packet.substring(0, flag);
-
+        flag = subPacket.indexOf("/");
+        subPacket = subPacket.substring(0, flag);
         int packetTokenLength = Integer.parseInt(subPacket);
 
         packet = packet.substring(flag + 1, packet.length());
@@ -443,6 +444,7 @@ public class ServerClient {
                 packet = packet.substring(flag + 1, packet.length());
             }
 
+            
             return _partitioningPacket;
         } catch (Exception e) {
             System.err.println(e + " occured Error");
@@ -459,7 +461,7 @@ public class ServerClient {
     public void sendPacket(int partitionPacketNumber, String... datas) {
         String packet = new String();
 
-        packet = packet.concat(partitionPacketNumber + "/");
+        packet = packet.concat("/"+ partitionPacketNumber + "/");
 
         for (int i = 0; i < partitionPacketNumber; i++) {
             packet = packet.concat(datas[i] + "/");
@@ -491,7 +493,7 @@ public class ServerClient {
         thread.setPriority(Thread.MAX_PRIORITY);
         thread.start();
     }
-    
+
     public String encrypt(String message) throws Exception {
 
         // use key coss2
@@ -502,11 +504,11 @@ public class ServerClient {
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
 
         byte[] encrypted = cipher.doFinal(message.getBytes());
-        
-        return  Hex.encodeHexString(encrypted);
-        
+
+        return Hex.encodeHexString(encrypted);
+
     }
-    
+
     public String decrypt(String encrypted) throws Exception {
 
         // use key coss2
@@ -514,14 +516,13 @@ public class ServerClient {
 
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-        
+
         byte[] original = cipher.doFinal(Hex.decodeHex(encrypted.toCharArray()));
-        
+
         String originalString = new String(original);
-        
+
         return originalString;
     }
-
 
     /**
      * if client connection's state is terminate, then this method is called

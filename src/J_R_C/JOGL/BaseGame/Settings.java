@@ -521,5 +521,7 @@ public class Settings {
     public static final float fSPRITEGAMEHEIGHT = 480;
     
     public static final String sEncryptKey = "fe8025947de7cd71";
+    
+    public static int nReceiveBufferSize = 1000;
 
 }

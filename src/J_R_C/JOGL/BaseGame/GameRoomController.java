@@ -508,13 +508,15 @@ public class GameRoomController implements Initializable {
 
                 // game logic
 
-                /*
-                 * player.setVelocity(0, 0); if (input.contains("LEFT"))
-                 * player.addVelocity(-50, 0); if (input.contains("RIGHT"))
-                 * player.addVelocity(50, 0); if (input.contains("UP"))
-                 * player.addVelocity(0, -50); if (input.contains("DOWN"))
-                 * player.addVelocity(0, 50); player.update(elapsedTime);
-                 */
+                if (input.contains("LEFT"))
+                    players.get(0).addVelocity(-3, 0); 
+                if (input.contains("RIGHT"))
+                    players.get(0).addVelocity(3, 0); 
+                if (input.contains("UP"))
+                    players.get(0).addVelocity(0, -3); 
+                if (input.contains("DOWN"))
+                    players.get(0).addVelocity(0, 3); 
+                 
 
                 // collision detection
 
@@ -526,12 +528,13 @@ public class GameRoomController implements Initializable {
                         Settings.nGameAsteroidSceneHeight);
 
                 for (int i = 0; i < players.size(); i++)
+                {
                     players.get(i).render(gc);
-                
+                    players.get(i).update(elapsedTime);
+                }
                 for (int i = 0; i < asteroids.size(); i++)
                 asteroids.get(i).render(gc);
                     
-                /* player.render(gc); */
             }
         };
 

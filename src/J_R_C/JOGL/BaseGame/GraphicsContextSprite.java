@@ -6,6 +6,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.geometry.Rectangle2D;
 
 public class GraphicsContextSprite {
+    private double MAXIMUMSPEED = 10;
+
     private Image image;
 
     private double imageStartX;
@@ -111,6 +113,15 @@ public class GraphicsContextSprite {
     public void addVelocity(double x, double y) {
         velocityX += x;
         velocityY += y;
+        if (velocityX > MAXIMUMSPEED)
+            velocityX = MAXIMUMSPEED;
+        else if (velocityX < -MAXIMUMSPEED)
+            velocityX = -MAXIMUMSPEED;
+       
+        if (velocityY > MAXIMUMSPEED)
+            velocityY = MAXIMUMSPEED;
+        else if (velocityY < -MAXIMUMSPEED)
+            velocityY = -MAXIMUMSPEED;
     }
 
     public void update(double time) {
@@ -161,6 +172,5 @@ public class GraphicsContextSprite {
     public double getPositionY() {
         return positionY;
     }
-    
-    
+
 }

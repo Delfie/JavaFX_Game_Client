@@ -31,9 +31,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
@@ -100,6 +97,9 @@ public class GameRoomController implements Initializable {
      */
     @FXML
     private AnchorPane anchorPane;
+    
+    @FXML
+    private AnchorPane mainPane;
 
     /**
      * this label show the currently have play token's client name
@@ -208,6 +208,12 @@ public class GameRoomController implements Initializable {
 
     private ArrayList<Player> asteroids = new ArrayList<Player>();
 
+    private Player clientMainPlayer;
+
+    private double meteriorGamePlayerPositionX;
+
+    private double meteriorGamePlayerPositionY;
+
     // = new GraphicsContextSprite("box.png", 100, 100);
 
     /*
@@ -217,7 +223,8 @@ public class GameRoomController implements Initializable {
      */
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-
+        meteriorGamePlayerPositionX = 0;
+        meteriorGamePlayerPositionY = 0;
         this.setGameStart(false);
         lbCatchmePlayCount.setVisible(false);
         lbPlayerTurn.setVisible(false);
@@ -229,6 +236,22 @@ public class GameRoomController implements Initializable {
         // register click event listener
         btnCancel.setOnAction(e -> handleBtnCancel(e));
         btnStartCancel.setOnAction(e -> handlebtnStartStop(e));
+        
+        mainPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            public void handle(KeyEvent e) {
+                String code = e.getCode().toString();
+                if (!input.contains(code))
+                    input.add(code);
+            }
+        });
+
+        mainPane.setOnKeyReleased(new EventHandler<KeyEvent>() {
+            public void handle(KeyEvent e) {
+                String code = e.getCode().toString();
+                input.remove(code);
+            }
+        });
+
 
         client = LoginController.getClient();
         client.setGameRoomController(this);
@@ -244,6 +267,7 @@ public class GameRoomController implements Initializable {
 
         btnSendMessage.setOnAction(e -> handleBtnSendingMessage(e));
         cheatingTextEdit.setOnKeyPressed(e -> handleBtnKeyEvent(e));
+        cheatingTextArea.requestFocus();
 
         isTicTacTocTwoColorMode = false;
         ticTacTocMultipeColorboard = new Sprite[8];
@@ -466,20 +490,6 @@ public class GameRoomController implements Initializable {
         Canvas canvas = new Canvas(360, 280);
 
         anchorPane.getChildren().add(canvas);
-        canvas.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
-            public void handle(KeyEvent e) {
-                String code = e.getCode().toString();
-                if (!input.contains(code))
-                    input.add(code);
-            }
-        });
-
-        canvas.getScene().setOnKeyReleased(new EventHandler<KeyEvent>() {
-            public void handle(KeyEvent e) {
-                String code = e.getCode().toString();
-                input.remove(code);
-            }
-        });
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
@@ -509,14 +519,13 @@ public class GameRoomController implements Initializable {
                 // game logic
 
                 if (input.contains("LEFT"))
-                    players.get(0).addVelocity(-3, 0); 
+                    clientMainPlayer.addVelocity(-3, 0);
                 if (input.contains("RIGHT"))
-                    players.get(0).addVelocity(3, 0); 
+                    clientMainPlayer.addVelocity(3, 0);
                 if (input.contains("UP"))
-                    players.get(0).addVelocity(0, -3); 
+                    clientMainPlayer.addVelocity(0, -3);
                 if (input.contains("DOWN"))
-                    players.get(0).addVelocity(0, 3); 
-                 
+                    clientMainPlayer.addVelocity(0, 3);
 
                 // collision detection
 
@@ -526,15 +535,28 @@ public class GameRoomController implements Initializable {
                 background.render(gc, Settings.nGameAsteroidSceneWidth / 2,
                         Settings.nGameAsteroidSceneHeight / 2, Settings.nGameAsteroidSceneWidth,
                         Settings.nGameAsteroidSceneHeight);
+                if (clientMainPlayer != null) {
+                    clientMainPlayer.update(elapsedTime);
 
-                for (int i = 0; i < players.size(); i++)
-                {
-                    players.get(i).render(gc);
-                    players.get(i).update(elapsedTime);
+                    if (Math.abs(meteriorGamePlayerPositionX - clientMainPlayer.getPositionX()) > 0.5
+                            || Math.abs(meteriorGamePlayerPositionY
+                                    - clientMainPlayer.getPositionY()) > 0.5) {
+                        client.sendPacket(5, Settings._REQUEST_METEORGAME_PLAYER_MOVING + "",
+                                getsRoomName(), client.getClientName(),
+                                clientMainPlayer.getPositionX() + "",
+                                clientMainPlayer.getPositionY() + "");
+                        meteriorGamePlayerPositionX = clientMainPlayer.getPositionX();
+                        meteriorGamePlayerPositionY = clientMainPlayer.getPositionY();
+                    }
                 }
+                for (int i = 0; i < players.size(); i++) {
+                    players.get(i).render(gc);
+
+                }
+
                 for (int i = 0; i < asteroids.size(); i++)
-                asteroids.get(i).render(gc);
-                    
+                    asteroids.get(i).render(gc);
+
             }
         };
 
@@ -588,6 +610,7 @@ public class GameRoomController implements Initializable {
             case LEFT:
             case RIGHT:
             case UP:
+                input.clear();
             case DOWN:
                 String code = e.getCode().toString();
                 if (!input.contains(code))
@@ -914,10 +937,12 @@ public class GameRoomController implements Initializable {
         players.add(player);
 
         for (int i = 0; i < players.size(); i++) {
-            if (players.get(i).getsPlayerName().equals(client.getClientName()))
+            if (players.get(i).getsPlayerName().equals(client.getClientName())) {
                 client.sendPacket(6, Settings._REQUEST_METEORGAME_REINIT_GAME_PLAY + "",
                         getsRoomName(), packet[1], client.getClientName(), players.get(i)
                                 .getPositionX() + "", players.get(i).getPositionY() + "");
+                clientMainPlayer = players.get(i);
+            }
 
         }
 
@@ -963,6 +988,18 @@ public class GameRoomController implements Initializable {
         asteroid.setImageSize(5, 5);
         asteroid.setsPlayerName("asteroid");
         asteroids.add(asteroid);
+    }
+
+    // 2 player name 3 position x 4 position y
+    public void updateMeteorGamePlayerPosition(String[] packet) {
+        if (client.getClientName().equals(packet[1]))
+            return;
+
+        for (int i = 0; i < players.size(); i++)
+            if (players.get(i).getsPlayerName().equals(packet[1])) {
+                players.get(i).setPosition(Double.parseDouble(packet[2]),
+                        Double.parseDouble(packet[3]));
+            }
     }
 
     /**

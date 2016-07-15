@@ -44,7 +44,7 @@
 			editable="false" prefWidth="440" prefHeight="120" />
 
 		<TextField fx:id="cheatingTextEdit" layoutX="20" layoutY="445"
-			editable="true" prefWidth="390" prefHeight="25" />
+			editable="true" prefWidth="390" prefHeight="25"/>
 
 		<Button fx:id="btnSendMessage" layoutX="420.0" layoutY="445.0"
 			styleClass="button" text="전송" />

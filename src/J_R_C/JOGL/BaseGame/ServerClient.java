@@ -6,17 +6,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javafx.application.Platform;
+import javafx.fxml.Initializable;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Hex;
-
-import javafx.application.Platform;
-import javafx.fxml.Initializable;
 
 /**
  * @author KJW finish at 2016/ 02/ 15
@@ -363,7 +362,11 @@ public class ServerClient {
                             ((GameRoomController)gameRoomController)
                                     .initMeteorGameWhenStartGame(splitPacket);
                             break;
-
+                            
+                        case Settings._ANSWER_METEORGAME_PLAYER_MOVING:
+                            ((GameRoomController)gameRoomController)
+                            .updateMeteorGamePlayerPosition(splitPacket);
+                    break;
                         // process unExist protocols
                         default:
                             System.err.println("[" + protocol
@@ -374,6 +377,7 @@ public class ServerClient {
 
             } catch (Exception e) {
                 isServerConnected = SERVERCONNECTIONFAIL;
+                System.err.println("testing");
                 System.err.println("[" + e + "] you cannot connect the server - receiving Error");
                 stopClient();
                 break;

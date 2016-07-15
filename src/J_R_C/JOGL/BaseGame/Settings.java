@@ -345,6 +345,16 @@ public class Settings {
      * Answer Client METEORGAME STONE REINIT GAME PLAY 66
      */
     public static final int _ANSWER_METEORGAME_UNIVERSE_INIT = 0x00000042;
+    
+    /**
+     * Request METEORGAME STONE REINIT GAME PLAY 67
+     */
+    public static final int _REQUEST_METEORGAME_PLAYER_MOVING = 0x00000043;
+    
+    /**
+     * Request METEORGAME STONE REINIT GAME PLAY 68
+     */
+    public static final int _ANSWER_METEORGAME_PLAYER_MOVING = 0x00000044;
 
     // Asset Constant
 

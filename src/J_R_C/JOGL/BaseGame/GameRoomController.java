@@ -97,7 +97,7 @@ public class GameRoomController implements Initializable {
      */
     @FXML
     private AnchorPane anchorPane;
-    
+
     @FXML
     private AnchorPane mainPane;
 
@@ -124,6 +124,9 @@ public class GameRoomController implements Initializable {
      */
     @FXML
     private Label lbCatchmePlayCount;
+
+    @FXML
+    private Label lbPlayerTurnBlockText;
 
     /**
      * for saving primary Stage ( change Scene)
@@ -214,6 +217,10 @@ public class GameRoomController implements Initializable {
 
     private double meteriorGamePlayerPositionY;
 
+    private boolean isMeteorGameStartPrepareFinish;
+
+    private int nMeteorGameDestroyCount;
+
     // = new GraphicsContextSprite("box.png", 100, 100);
 
     /*
@@ -223,8 +230,10 @@ public class GameRoomController implements Initializable {
      */
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        isMeteorGameStartPrepareFinish = false;
         meteriorGamePlayerPositionX = 0;
         meteriorGamePlayerPositionY = 0;
+        nMeteorGameDestroyCount = 0;
         this.setGameStart(false);
         lbCatchmePlayCount.setVisible(false);
         lbPlayerTurn.setVisible(false);
@@ -236,7 +245,7 @@ public class GameRoomController implements Initializable {
         // register click event listener
         btnCancel.setOnAction(e -> handleBtnCancel(e));
         btnStartCancel.setOnAction(e -> handlebtnStartStop(e));
-        
+
         mainPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent e) {
                 String code = e.getCode().toString();
@@ -251,7 +260,6 @@ public class GameRoomController implements Initializable {
                 input.remove(code);
             }
         });
-
 
         client = LoginController.getClient();
         client.setGameRoomController(this);
@@ -527,8 +535,6 @@ public class GameRoomController implements Initializable {
                 if (input.contains("DOWN"))
                     clientMainPlayer.addVelocity(0, 3);
 
-                // collision detection
-
                 // render
 
                 gc.clearRect(0, 0, Settings.fSPRITEGAMEWIDTH, Settings.fSPRITEGAMEHEIGHT);
@@ -549,13 +555,32 @@ public class GameRoomController implements Initializable {
                         meteriorGamePlayerPositionY = clientMainPlayer.getPositionY();
                     }
                 }
+
+                // collision detection
+
                 for (int i = 0; i < players.size(); i++) {
                     players.get(i).render(gc);
 
                 }
 
-                for (int i = 0; i < asteroids.size(); i++)
+                for (int i = 0; i < asteroids.size(); i++) {
                     asteroids.get(i).render(gc);
+
+                    for (int j = 0; j < players.size(); j++) {
+                        if (players.get(j).intersects(asteroids.get(i))) {
+
+                            if (isMeteorGameStartPrepareFinish == true) {
+                                client.sendPacket(5, Settings._REQUEST_METEORGAME_METEOR_DELETE
+                                        + "", getsRoomName(), client.getClientName(), asteroids
+                                        .get(i).getPositionX() + "", asteroids.get(i)
+                                        .getPositionY() + "");
+                                asteroids.remove(i);
+
+                            }
+                        }
+
+                    }
+                }
 
             }
         };
@@ -990,6 +1015,11 @@ public class GameRoomController implements Initializable {
         asteroids.add(asteroid);
     }
 
+    public void StartPrepareCompleteMeteorGame(String[] packet) {
+        isMeteorGameStartPrepareFinish = Boolean.parseBoolean(packet[1]);
+        Platform.runLater(() -> displayText("Game Start!!"));
+    }
+
     // 2 player name 3 position x 4 position y
     public void updateMeteorGamePlayerPosition(String[] packet) {
         if (client.getClientName().equals(packet[1]))
@@ -1000,6 +1030,31 @@ public class GameRoomController implements Initializable {
                 players.get(i).setPosition(Double.parseDouble(packet[2]),
                         Double.parseDouble(packet[3]));
             }
+    }
+
+    // 2 player name 3 position x 4 position y
+    public void deleteMeteorGameMeteor(String[] packet) {
+        if (client.getClientName().equals(packet[1])) {
+            nMeteorGameDestroyCount++;
+            Platform.runLater(() -> {
+                lbPlayerTurnBlockText.setText("count : " + nMeteorGameDestroyCount);
+            });
+            Platform.runLater(() -> {
+                lbPlayerTurn.setText(packet[4]);
+            });
+            return;
+        }
+        if (isMeteorGameStartPrepareFinish == false)
+            return;
+
+        for (int i = 0; i < asteroids.size(); i++)
+            if (asteroids.get(i).getPositionX() == Double.parseDouble(packet[2])
+                    && asteroids.get(i).getPositionY() == Double.parseDouble(packet[3])) {
+                asteroids.remove(i);
+            }
+        Platform.runLater(() -> {
+            lbPlayerTurn.setText(packet[4]);
+        });
     }
 
     /**
@@ -1395,6 +1450,11 @@ public class GameRoomController implements Initializable {
             lbPlayerTurn.setVisible(true);
         } else if (getnGameType() == Settings.nGameMeteorGame) {
             lbGameStyle.setText(Settings.sGameStringStyleMeteorGame);
+            lbPlayerTurnText.setText("winner");
+            lbPlayerTurn.setVisible(true);
+            lbPlayerTurnBlockText.setText("count : " + nMeteorGameDestroyCount);
+            ;
+            imageGameMainView.setVisible(false);
             drawSpriteImageView();
         }
 

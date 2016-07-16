@@ -362,11 +362,21 @@ public class ServerClient {
                             ((GameRoomController)gameRoomController)
                                     .initMeteorGameWhenStartGame(splitPacket);
                             break;
-                            
+
                         case Settings._ANSWER_METEORGAME_PLAYER_MOVING:
                             ((GameRoomController)gameRoomController)
-                            .updateMeteorGamePlayerPosition(splitPacket);
-                    break;
+                                    .updateMeteorGamePlayerPosition(splitPacket);
+                            break;
+
+                        case Settings._ANSWER_METEORGAME_PLAY_START:
+                            ((GameRoomController)gameRoomController)
+                                    .StartPrepareCompleteMeteorGame(splitPacket);
+                            break;
+
+                        case Settings._ANSWER_METEORGAME_METEOR_DELETE:
+                            ((GameRoomController)gameRoomController)
+                                    .deleteMeteorGameMeteor(splitPacket);
+                            break;
                         // process unExist protocols
                         default:
                             System.err.println("[" + protocol
@@ -448,7 +458,6 @@ public class ServerClient {
                 packet = packet.substring(flag + 1, packet.length());
             }
 
-            
             return _partitioningPacket;
         } catch (Exception e) {
             System.err.println(e + " occured Error");
@@ -465,7 +474,7 @@ public class ServerClient {
     public void sendPacket(int partitionPacketNumber, String... datas) {
         String packet = new String();
 
-        packet = packet.concat("/"+ partitionPacketNumber + "/");
+        packet = packet.concat("/" + partitionPacketNumber + "/");
 
         for (int i = 0; i < partitionPacketNumber; i++) {
             packet = packet.concat(datas[i] + "/");

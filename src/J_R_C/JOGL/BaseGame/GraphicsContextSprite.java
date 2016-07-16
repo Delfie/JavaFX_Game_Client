@@ -1,9 +1,9 @@
 
 package J_R_C.JOGL.BaseGame;
 
-import javafx.scene.image.Image;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
+import javafx.scene.shape.Circle;
 
 public class GraphicsContextSprite {
     private double MAXIMUMSPEED = 10;
@@ -117,7 +117,7 @@ public class GraphicsContextSprite {
             velocityX = MAXIMUMSPEED;
         else if (velocityX < -MAXIMUMSPEED)
             velocityX = -MAXIMUMSPEED;
-       
+
         if (velocityY > MAXIMUMSPEED)
             velocityY = MAXIMUMSPEED;
         else if (velocityY < -MAXIMUMSPEED)
@@ -147,14 +147,22 @@ public class GraphicsContextSprite {
                 / 2, positionYY - sizeY / 2, sizeX, sizeY);
     }
 
-    public Rectangle2D getBoundary() {
-        return new Rectangle2D(positionX, positionY, width, height);
+    public Circle getBoundary() {
+        return  new Circle(positionX - this.imageSizeX / 2, positionY - this.imageSizeY / 2,
+                this.imageSizeX);
+        
+        
     }
 
     public boolean intersects(GraphicsContextSprite s) {
-        return s.getBoundary().intersects(this.getBoundary());
+        double distX = positionX - s.getPositionX();
+        double distY = positionY - s.getPositionY();
+        
+        double distance = distX*distX + distY * distY;
+        double radiusSum = imageSizeX/2 + s.getImageSizeX();
+        return distance <= radiusSum* radiusSum;
     }
-
+    
     public String toString() {
         return " Position: [" + positionX + "," + positionY + "]" + " Velocity: [" + velocityX
                 + "," + velocityY + "]";
@@ -172,5 +180,23 @@ public class GraphicsContextSprite {
     public double getPositionY() {
         return positionY;
     }
+
+    public double getImageSizeX() {
+        return imageSizeX;
+    }
+
+    public void setImageSizeX(double imageSizeX) {
+        this.imageSizeX = imageSizeX;
+    }
+
+    public double getImageSizeY() {
+        return imageSizeY;
+    }
+
+    public void setImageSizeY(double imageSizeY) {
+        this.imageSizeY = imageSizeY;
+    }
+    
+    
 
 }

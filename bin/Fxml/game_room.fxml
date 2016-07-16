@@ -20,7 +20,7 @@
 
 		<Label fx:id="lbGameStyle" layoutX="20.0" layoutY="80.0" text="게임 스타일" />
 
-		<Label fx:id="lbPlayerTurnText" layoutX="20.0" layoutY="240.0"
+		<Label fx:id="lbPlayerTurnBlockText" layoutX="20.0" layoutY="240.0"
 			text="Your Block" />
 
 		<ImageView fx:id="imageGameMainView" layoutX="20" layoutY="260"

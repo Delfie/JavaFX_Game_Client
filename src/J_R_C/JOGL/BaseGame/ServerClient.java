@@ -377,6 +377,12 @@ public class ServerClient {
                             ((GameRoomController)gameRoomController)
                                     .deleteMeteorGameMeteor(splitPacket);
                             break;
+                            
+                        case Settings._ANSWER_METEORGAME_METEOR_GAME_FINISH:
+                            ((GameRoomController)gameRoomController)
+                            .setFinishMeteorGame();
+                            break;
+                            
                         // process unExist protocols
                         default:
                             System.err.println("[" + protocol

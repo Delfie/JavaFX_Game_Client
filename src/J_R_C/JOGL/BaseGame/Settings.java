@@ -15,6 +15,8 @@ public class Settings {
      * Error Code -1
      */
     public static final int ERRORCODE = -1;
+    
+    public static final int ZEROINIT = 0;
 
     /**
      * Check the client Access Status 1
@@ -367,10 +369,19 @@ public class Settings {
     public static final int _REQUEST_METEORGAME_METEOR_DELETE = 0x00000046;
     
     /**
-     * Request METEORGAME STONE REINIT GAME PLAY 71
+     * Answer METEORGAME STONE REINIT GAME PLAY 71
      */
     public static final int _ANSWER_METEORGAME_METEOR_DELETE = 0x00000047;
     
+    /**
+     * Request METEORGAME STONE REINIT GAME PLAY 72
+     */
+    public static final int _REQUEST_METEORGAME_METEOR_GAME_FINISH = 0x00000048;
+    
+    /**
+     * Answer METEORGAME STONE REINIT GAME PLAY 73
+     */
+    public static final int _ANSWER_METEORGAME_METEOR_GAME_FINISH = 0x00000049;
     
     // Asset Constant
 

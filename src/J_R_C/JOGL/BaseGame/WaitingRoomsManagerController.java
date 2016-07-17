@@ -49,7 +49,7 @@ public class WaitingRoomsManagerController implements Initializable {
     private final int ROOMNAMEMAXIMUMLENGTH = 5;
 
     private final int ROOMMAMBERMAXIMUMLENGTH = 1;
-    
+
     private final int SENDINGMESSAGEMAXLENGTH = 70;
 
     // Label
@@ -221,11 +221,12 @@ public class WaitingRoomsManagerController implements Initializable {
                     @Override
                     public void run() {
                         /*
-                        if (cheatingTextEdit.getText().length() > 29) {
-                            Platform.runLater(() -> handlePopup("25글자가 한계 입니다."));
-                            cheatingTextEdit.setText(cheatingTextEdit.getText(0, 29));
-                        }
-*/
+                         * if (cheatingTextEdit.getText().length() > 29) {
+                         * Platform.runLater(() ->
+                         * handlePopup("25글자가 한계 입니다."));
+                         * cheatingTextEdit.setText(cheatingTextEdit.getText(0,
+                         * 29)); }
+                         */
 
                         if (true == isClickTheRoomlist) {
 
@@ -281,8 +282,7 @@ public class WaitingRoomsManagerController implements Initializable {
                 .setStyle("-fx-background-color: -fx-outer-border, -fx-inner-border, -fx-body-color;-fx-background-insets: 0, 1, 2;-fx-background-radius: 5, 4, 3;");
         cheatingTextEdit.addEventFilter(KeyEvent.KEY_TYPED,
                 message_text_Validation(SENDINGMESSAGEMAXLENGTH));
-        
-        
+
         btnEnter.setOnAction(e -> handleBtnEnter(e));
         btnCancel.setOnAction(e -> handleBtnCancel(e));
         btnSendMessage.setOnAction(e -> handleBtnSendingMessage(e));
@@ -597,7 +597,8 @@ public class WaitingRoomsManagerController implements Initializable {
         ComboBox<String> gameSytleComboBox = (ComboBox<String>)parent.lookup("#gameStyleComboBox");
         gameSytleComboBox.setValue(Settings.sGameStringStyleCatchMe);
         gameSytleComboBox.getItems().addAll(Settings.sGameStringStyleCatchMe,
-                Settings.sGameStringStyleTicTacToc, Settings.sGameStringStyleMeteorGame);
+                Settings.sGameStringStyleTicTacToc, Settings.sGameStringStyleMeteorGame,
+                Settings.sGameStringStyleSiegeWarefare);
         /*
          * check about the clicke event , for selecting game image
          */
@@ -621,6 +622,11 @@ public class WaitingRoomsManagerController implements Initializable {
                             File file = new File("src/Asset/sky64.png");
                             Image image = new Image(file.toURI().toString());
                             nSelectedGame = Settings.nGameMeteorGame;
+                            imgViewGame.setImage(image);
+                        } else if (newValue.equals(Settings.sGameStringStyleSiegeWarefare)) {
+                            File file = new File("src/Asset/sky64.png");
+                            Image image = new Image(file.toURI().toString());
+                            nSelectedGame = Settings.nGameSiegeWarefare;
                             imgViewGame.setImage(image);
                         }
                     }
@@ -693,7 +699,7 @@ public class WaitingRoomsManagerController implements Initializable {
             }
         };
     }
-    
+
     /**
      * check the max message length
      * 

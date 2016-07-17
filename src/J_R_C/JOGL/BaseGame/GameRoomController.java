@@ -1065,7 +1065,7 @@ public class GameRoomController implements Initializable {
             if (asteroids.get(i).getPositionX() == Double.parseDouble(packet[2])
                     && asteroids.get(i).getPositionY() == Double.parseDouble(packet[3])) {
                 asteroids.remove(i);
-                System.out.println("error check : " + packet[1]+" , "+ client.getClientName());
+                System.out.println("error check : " + packet[1] + " , " + client.getClientName());
                 if (client.getClientName().equals(packet[1])) {
                     nMeteorGameDestroyCount++;
                     Platform.runLater(() -> {
@@ -1482,9 +1482,10 @@ public class GameRoomController implements Initializable {
             lbPlayerTurnText.setText("winner");
             lbPlayerTurn.setVisible(true);
             lbPlayerTurnBlockText.setText("count : " + nMeteorGameDestroyCount);
-            ;
             imageGameMainView.setVisible(false);
             drawSpriteImageView();
+        } else if (getnGameType() == Settings.nGameSiegeWarefare) {
+            lbGameStyle.setText(Settings.sGameStringStyleSiegeWarefare);
         }
 
         client.sendPacket(2, Settings._REQUEST_GAME_ROOM_MEMEBER_NUMBER + "", sRoomName);

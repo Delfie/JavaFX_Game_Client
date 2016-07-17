@@ -431,6 +431,8 @@ public class Settings {
      * game String Constant TicTacToc
      */
     public static final String sGameStringStyleMeteorGame = "운석게임";
+    
+    public static final String sGameStringStyleSiegeWarefare = "공성게임";
 
     /**
      * Game CatchMe Constant Count
@@ -447,6 +449,8 @@ public class Settings {
      */
     public static final int nGameMeteorGame = 3;
 
+    public static final int nGameSiegeWarefare = 4;
+    
     /**
      * Game CatchMe Item Left Constant 0
      */

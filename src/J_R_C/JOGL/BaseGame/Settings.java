@@ -383,6 +383,26 @@ public class Settings {
      */
     public static final int _ANSWER_METEORGAME_METEOR_GAME_FINISH = 0x00000049;
     
+    /**
+     * Request METEORGAME STONE REINIT GAME PLAY 74
+     */
+    public static final int _REQEUST_MOBILE_PANGPANG_SCORE  = 0x0000004a;
+    
+    /**
+     * Answer METEORGAME STONE REINIT GAME PLAY 75
+     */
+    public static final int _ANSWER_MOBILE_PANGPANG_SCORE  = 0x0000004b;
+  
+    /**
+     * Request METEORGAME STONE REINIT GAME PLAY 76
+     */
+    public static final int _REQUEST_PC_CLIENT_VERSION_CHECK = 0x0000004c;
+    
+    /**
+     * Answer METEORGAME STONE REINIT GAME PLAY 77
+     */
+    public static final int _ANSWER_PC_CLIENT_VERSION_CHECK = 0x0000004d;
+    
     // Asset Constant
 
     /**
@@ -564,5 +584,7 @@ public class Settings {
     public static final String sEncryptKey = "fe8025947de7cd71";
     
     public static int nReceiveBufferSize = 1000;
+    
+    public static String clientVersion = "0.0.1v";
 
 }

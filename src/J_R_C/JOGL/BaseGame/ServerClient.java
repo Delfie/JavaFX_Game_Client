@@ -108,6 +108,8 @@ public class ServerClient {
                                 + socket.getRemoteSocketAddress() + "]");
 
                         isServerConnected = SERVERCONNECTIONSUCCESS;
+                        
+                        sendPacket(2,Settings._REQUEST_PC_CLIENT_VERSION_CHECK+"",Settings.clientVersion);
 
                         msTimer = new Timer();
                         msSecond = new TimerTask() {
@@ -381,6 +383,10 @@ public class ServerClient {
                         case Settings._ANSWER_METEORGAME_METEOR_GAME_FINISH:
                             ((GameRoomController)gameRoomController)
                             .setFinishMeteorGame();
+                            break;
+                            
+                        case Settings._ANSWER_PC_CLIENT_VERSION_CHECK:
+                            ((LoginController)loginController).clientVersionCheck(splitPacket);
                             break;
                             
                         // process unExist protocols

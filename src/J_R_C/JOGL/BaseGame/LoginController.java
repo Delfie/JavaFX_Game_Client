@@ -62,13 +62,14 @@ public class LoginController implements Initializable {
     @FXML
     private Button btnNewClient;
 
-    private String temp;
-
     /**
      * User ID TextField
      */
     @FXML
     TextField txtID;
+
+    @FXML
+    Label versionID;
 
     /**
      * User Password TextField
@@ -91,6 +92,8 @@ public class LoginController implements Initializable {
      */
     private boolean flag;
 
+    private boolean isClientVersionCheck;
+
     /*
      * (non-Javadoc)
      * @see javafx.fxml.Initializable#initialize(java.net.URL,
@@ -99,6 +102,7 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        isClientVersionCheck = false;
         flag = false;
 
         // only one client create (using design pattern <-- singleton
@@ -133,23 +137,24 @@ public class LoginController implements Initializable {
                             Platform.runLater(() -> handlePopup("11글자가 한계 입니다."));
                             txtPassWord.setText(txtID.getText(0, 11));
                         }
-                        
-                        
-                        if (txtFieldUsePassWordCheck!= null &&txtFieldUsePassWordCheck.getText().length() > 11) {
+
+                        if (txtFieldUsePassWordCheck != null
+                                && txtFieldUsePassWordCheck.getText().length() > 11) {
                             Platform.runLater(() -> handlePopup("11글자가 한계 입니다."));
-                            txtFieldUsePassWordCheck.setText(txtFieldUsePassWordCheck.getText(0, 11));
+                            txtFieldUsePassWordCheck.setText(txtFieldUsePassWordCheck
+                                    .getText(0, 11));
                         }
-                        
-                        if (txtFieldUsePassWord != null &&txtFieldUsePassWord.getText().length() > 11) {
+
+                        if (txtFieldUsePassWord != null
+                                && txtFieldUsePassWord.getText().length() > 11) {
                             Platform.runLater(() -> handlePopup("11글자가 한계 입니다."));
                             txtFieldUsePassWord.setText(txtFieldUsePassWord.getText(0, 11));
                         }
-                        
-                        if (txtFieldUserId != null &&txtFieldUserId.getText().length() > 11) {
+
+                        if (txtFieldUserId != null && txtFieldUserId.getText().length() > 11) {
                             Platform.runLater(() -> handlePopup("11글자가 한계 입니다."));
                             txtFieldUserId.setText(txtFieldUserId.getText(0, 11));
                         }
-                        
 
                         // if flag turn on then client login game
                         if (flag) {
@@ -367,7 +372,6 @@ public class LoginController implements Initializable {
             }
         };
     }
-    
 
     /**
      * check the client name. client must start the name using character (exp:
@@ -380,7 +384,7 @@ public class LoginController implements Initializable {
         return new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent e) {
-                
+
                 TextField txt_TextField = (TextField)e.getSource();
                 if (txt_TextField.getText().length() >= max_Lengh) {
                     e.consume();
@@ -407,15 +411,31 @@ public class LoginController implements Initializable {
             if (ServerClient.SERVERCONNECTIONFAIL == client.getIsServerConnected()) {
                 btnLogin.setText("연결중");
             } else {
-
-                client.sendPacket(3, Settings._REQUEST_LOGIN + "", txtID.getText(),
-                        txtPassWord.getText());
-
+                if (isClientVersionCheck)
+                    client.sendPacket(3, Settings._REQUEST_LOGIN + "", txtID.getText(),
+                            txtPassWord.getText());
+                else
+                    Platform.runLater(() -> handlePopup("you must update your Client Version"));
             }
         } else if (btnLogin.getText().equals("재연결")) {
             client.startClient();
         }
 
+    }
+
+    public void clientVersionCheck(String[] packet) {
+        boolean isCheck = Boolean.parseBoolean(packet[1]);
+
+        if (isCheck) {
+            {
+                isClientVersionCheck = true;
+                Platform.runLater(() -> versionID.setText(Settings.clientVersion));
+                Platform.runLater(() -> versionID.setLayoutX(260));
+            }
+        } else {
+            isClientVersionCheck = false;
+            Platform.runLater(() -> versionID.setText("wrong version"));
+        }
     }
 
     /**

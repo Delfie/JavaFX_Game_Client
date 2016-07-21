@@ -586,5 +586,22 @@ public class Settings {
     public static int nReceiveBufferSize = 1000;
     
     public static String clientVersion = "0.0.1v";
+    
+    public static int nBuildingTimes;
+    
+    public static final String sBuildingVersionFileName = "clientV.jrc";
+    
+    public static final boolean isDevelopingMode = true;
+    
+    public static final String sSenderSplitProtocolToken = "/";
+    
+    public static final String sReceiverSplitProtocolToken = "/&";
+    
+    
+    public static final String sSenderSplitMultipleToken = "@";
+
+    public static final String sReceiverSplitMultipleToken = "@";
+    
+    public static boolean isClientVersionCheck = false;
 
 }

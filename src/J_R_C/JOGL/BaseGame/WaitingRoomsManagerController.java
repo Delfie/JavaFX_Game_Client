@@ -197,7 +197,7 @@ public class WaitingRoomsManagerController implements Initializable {
                 // room information
                 if (null != roomListView.getSelectionModel().getSelectedItem()) {
                     isClickTheRoomlist = true;
-                    client.sendPacket(2, Settings._REQUEST_CLICKED_ROOM_INFORMATION + "",
+                    client.sendPacket(Settings._REQUEST_CLICKED_ROOM_INFORMATION + "",
                             roomListView.getSelectionModel().getSelectedItem());
 
                     lbRoomName.setText(roomListView.getSelectionModel().getSelectedItem());
@@ -252,10 +252,10 @@ public class WaitingRoomsManagerController implements Initializable {
 
                         // request about room member number to server
                         if (!lbRoomName.getText().equals(" "))
-                            client.sendPacket(2, Settings._REQUEST_ROOM_MEMBER_NUMBER + "",
+                            client.sendPacket(Settings._REQUEST_ROOM_MEMBER_NUMBER + "",
                                     lbRoomName.getText());
 
-                        client.sendPacket(1, Settings._REQUEST_GAME_ROOM_LIST + "");
+                        client.sendPacket(Settings._REQUEST_GAME_ROOM_LIST + "");
 
                         // if disconnected server then this code is operated
                         if (client.getIsServerConnected() == ServerClient.SERVERCONNECTIONFAIL) {
@@ -376,7 +376,7 @@ public class WaitingRoomsManagerController implements Initializable {
         if (packet.length() > 0) {
             cheatingTextEdit.clear();
 
-            client.sendPacket(2, Settings._REQUEST_WAITING_ROOMS_ENDING_MESSAGE + "", packet);
+            client.sendPacket(Settings._REQUEST_WAITING_ROOMS_ENDING_MESSAGE + "", packet);
         }
     }
 
@@ -389,9 +389,9 @@ public class WaitingRoomsManagerController implements Initializable {
 
         Stage stage = (Stage)mainPane.getScene().getWindow();
 
-        client.sendPacket(2, Settings._REQUEST_OUT_OF_THE_SERVER + "", client.getClientName());
+        client.sendPacket(Settings._REQUEST_OUT_OF_THE_SERVER + "", client.getClientName());
 
-        client.sendPacket(1, Settings._REQUEST_LOGOUT + "");
+        client.sendPacket(Settings._REQUEST_LOGOUT + "");
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/root.fxml"));
@@ -399,6 +399,7 @@ public class WaitingRoomsManagerController implements Initializable {
             Scene scene = new Scene(loginScene);
             scene.getStylesheets().add(getClass().getResource("/Css/app.css").toString());
             LoginController loginController = loader.getController();
+            loginController.defaultVersionSet();
             loginController.setPrimaryStage(primaryStage);
             stage.setScene(scene);
             stage.show();
@@ -648,7 +649,7 @@ public class WaitingRoomsManagerController implements Initializable {
      */
     public void handleBtnEnter(ActionEvent event) {
 
-        client.sendPacket(3, Settings._REQUEST_GUEST_ENTER_THE_ROOM + "", roomListView
+        client.sendPacket(Settings._REQUEST_GUEST_ENTER_THE_ROOM + "", roomListView
                 .getSelectionModel().getSelectedItem(), client.getClientName());
 
     }
@@ -662,7 +663,7 @@ public class WaitingRoomsManagerController implements Initializable {
 
         if (!txtFieldName.getText().isEmpty() && !txtFieldNumber.getText().isEmpty()) {
 
-            client.sendPacket(4, Settings._REQUEST_THE_ROOM_LIST_INFORMATION + "", txtFieldName
+            client.sendPacket(Settings._REQUEST_THE_ROOM_LIST_INFORMATION + "", txtFieldName
                     .getText().toString(), Integer.parseInt(txtFieldNumber.getText().toString())
                     + "", nSelectedGame + "");
 

@@ -71,8 +71,7 @@ public class Settings {
     /**
      * Request The Wait Room Clients Sending Message 11
      */
-    public static final int _REQUEST_WAITING_ROOMS_ENDING_MESSAGE = 0x0000000b;
-
+    public static final int _REQUEST_WAITING_ROOM_SENDING_MESSAGE = 0x0000000b;
     /**
      * Answer The Wait Room Clients Sending Message 12
      */
@@ -593,7 +592,7 @@ public class Settings {
     
     public static final boolean isDevelopingMode = true;
     
-    public static final String sSenderSplitProtocolToken = "/";
+    public static final String sSenderSplitProtocolToken = "/&&";
     
     public static final String sReceiverSplitProtocolToken = "/&";
     

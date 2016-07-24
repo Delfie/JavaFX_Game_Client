@@ -114,6 +114,7 @@ public class LoginController implements Initializable {
 		btnCancel.setOnAction(e -> handleBtnCancel(e));
 		btnLogin.setOnAction(e -> handleBtnLogin(e));
 		btnNewClient.setOnAction(e -> handleNewClient(e));
+		mainPane.setOnKeyPressed(e -> handleBtnKeyEvent(e));
 
 		// run scheduler for checking
 		final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -188,6 +189,18 @@ public class LoginController implements Initializable {
 		client.setLoginController(this);
 
 	}
+	
+    public void handleBtnKeyEvent(KeyEvent e) {
+        switch (e.getCode()) {
+            case ENTER:
+            	handleBtnLogin(null);
+                break;
+                
+            default:
+                e.consume();
+                break;
+        }
+    }
 
 	/**
 	 * set the primary stage

@@ -216,7 +216,8 @@ public class ServerClient {
 						break;
 					// set the message event in the waiting room
 					case Settings._ANSWER_WAITING_ROOM_SENDING_MESSAGE:
-						((WaitingRoomsManagerController) controller).setTheRoomMessage(splitPacket);
+						if (controller instanceof WaitingRoomsManagerController)
+							((WaitingRoomsManagerController) controller).setTheRoomMessage(splitPacket);
 						break;
 					// make the new room in the waiting room
 					case Settings._ANSWER_THE_ROOM_MAKE_SUCCESS:
@@ -242,7 +243,8 @@ public class ServerClient {
 						break;
 					// set the message event in the game room
 					case Settings._ANSWER_ROOM_MEMEBER_MESSAGE:
-						((GameRoomController) gameRoomController).setTheRoomMessage(splitPacket);
+						if (gameRoomController instanceof GameRoomController)
+							((GameRoomController) gameRoomController).setTheRoomMessage(splitPacket);
 						break;
 					// notify that new member enter the room
 					case Settings._ANSWER_NEW_ROOM_MEMEBER_NOTIFICATION:

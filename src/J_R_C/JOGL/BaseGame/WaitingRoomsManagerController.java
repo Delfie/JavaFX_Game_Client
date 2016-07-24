@@ -305,6 +305,12 @@ public class WaitingRoomsManagerController implements Initializable {
             case ENTER:
                 sendingMessageInTheRoom();
                 break;
+                
+            case LEFT:
+            	break;
+            	
+            case RIGHT:
+            	break;
 
             case BACK_SPACE:
                 break;
@@ -376,7 +382,7 @@ public class WaitingRoomsManagerController implements Initializable {
         if (packet.length() > 0) {
             cheatingTextEdit.clear();
 
-            client.sendPacket(Settings._REQUEST_WAITING_ROOMS_ENDING_MESSAGE + "", packet);
+            client.sendPacket(Settings._REQUEST_WAITING_ROOM_SENDING_MESSAGE + "", packet);
         }
     }
 

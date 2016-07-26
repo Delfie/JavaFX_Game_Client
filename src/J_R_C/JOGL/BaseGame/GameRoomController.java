@@ -225,6 +225,14 @@ public class GameRoomController implements Initializable {
 
 	private String sNowMeteorGameWinner;
 
+	private String[] sCommandsContainer;
+
+	private int nCommandIndicatorPoisition;
+
+	private int nCommandsContainerIndicator;
+
+	int _firstPoistion;
+
 	// = new GraphicsContextSprite("box.png", 100, 100);
 
 	/*
@@ -255,18 +263,11 @@ public class GameRoomController implements Initializable {
 
 		mainPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
-				String code = e.getCode().toString();
-				if (!input.contains(code))
-					input.add(code);
+				meteorGameInputKeyManager(e);
 			}
 		});
 
-		mainPane.setOnKeyReleased(new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent e) {
-				String code = e.getCode().toString();
-				input.remove(code);
-			}
-		});
+		mainPane.setOnKeyReleased(e -> handleBtnKeyReleaseEvent(e));
 
 		client = LoginController.getClient();
 		client.setGameRoomController(this);
@@ -281,6 +282,7 @@ public class GameRoomController implements Initializable {
 
 		btnSendMessage.setOnAction(e -> handleBtnSendingMessage(e));
 		cheatingTextEdit.setOnKeyPressed(e -> handleBtnKeyEvent(e));
+		cheatingTextEdit.setOnKeyReleased(e -> handleBtnKeyReleaseEvent(e));
 		cheatingTextArea.requestFocus();
 
 		isTicTacTocTwoColorMode = false;
@@ -615,6 +617,11 @@ public class GameRoomController implements Initializable {
 
 	}
 
+	public void handleBtnKeyReleaseEvent(KeyEvent e) {
+		if (!input.isEmpty())
+			input.clear();
+	}
+
 	/**
 	 * handle key event about sending message
 	 * 
@@ -630,13 +637,41 @@ public class GameRoomController implements Initializable {
 			break;
 
 		case LEFT:
+			meteorGameInputKeyManager(e);
+			break;
+
 		case RIGHT:
+			meteorGameInputKeyManager(e);
+			break;
 		case UP:
-			input.clear();
+			if (nCommandIndicatorPoisition != nCommandsContainerIndicator
+					&& nCommandIndicatorPoisition > Settings.ERRORCODE)
+				setServerCommandTextEdit();
+
+			if (nCommandIndicatorPoisition != nCommandsContainerIndicator)
+				nCommandIndicatorPoisition--;
+
+			if (nCommandIndicatorPoisition < 0
+					&& sCommandsContainer[Settings.nMaximumSizeOfCommandsContainer - 1] != null)
+				nCommandIndicatorPoisition = Settings.nMaximumSizeOfCommandsContainer - 1;
+
+			meteorGameInputKeyManager(e);
+
+			break;
 		case DOWN:
-			String code = e.getCode().toString();
-			if (!input.contains(code))
-				input.add(code);
+			if (nCommandIndicatorPoisition != _firstPoistion)
+				nCommandIndicatorPoisition++;
+
+			if (nCommandIndicatorPoisition >= Settings.nMaximumSizeOfCommandsContainer
+					&& sCommandsContainer[Settings.ZEROINIT] != null)
+				nCommandIndicatorPoisition = Settings.ZEROINIT;
+
+			if (nCommandIndicatorPoisition != nCommandsContainerIndicator
+					&& nCommandIndicatorPoisition > Settings.ERRORCODE)
+				setServerCommandTextEdit();
+
+			meteorGameInputKeyManager(e);
+
 			break;
 
 		default:
@@ -645,11 +680,34 @@ public class GameRoomController implements Initializable {
 		}
 	}
 
+	private void setServerCommandTextEdit() {
+		Platform.runLater(() -> cheatingTextEdit.setText(sCommandsContainer[nCommandIndicatorPoisition]));
+		Platform.runLater(() -> cheatingTextEdit.positionCaret(cheatingTextEdit.getLength()));
+
+	}
+
+	private void meteorGameInputKeyManager(KeyEvent e) {
+		String code = e.getCode().toString();
+		if (!input.contains(code))
+			input.add(code);
+	}
+
 	/**
 	 * handle the sending message in the game room
 	 */
 	private void sendingMessageInTheRoom() {
 		String packet = cheatingTextEdit.getText();
+
+		{
+			sCommandsContainer[nCommandsContainerIndicator] = packet;
+			nCommandIndicatorPoisition = nCommandsContainerIndicator;
+			_firstPoistion = nCommandIndicatorPoisition;
+			nCommandsContainerIndicator++;
+
+			if (nCommandsContainerIndicator >= Settings.nMaximumSizeOfCommandsContainer)
+				nCommandsContainerIndicator = Settings.ZEROINIT;
+		}
+
 		if (packet.length() > 0) {
 			cheatingTextEdit.clear();
 

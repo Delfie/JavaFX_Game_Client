@@ -401,7 +401,42 @@ public class Settings {
 	 * Answer METEORGAME STONE REINIT GAME PLAY 77
 	 */
 	public static final int _ANSWER_PC_CLIENT_VERSION_CHECK = 0x0000004d;
+	
+	/**
+	 * Request METEORGAME STONE REINIT GAME PLAY 78
+	 */
+	public static final int _REQUEST_PANGPANG_INIT_GAME_PLAY = 0x0000004e;
 
+	/**
+	 * Answer METEORGAME STONE REINIT GAME PLAY 79
+	 */
+	public static final int _ANSWER_PANGPANG_INIT_GAME_PLAY = 0x0000004f;
+	
+	/**
+	 * Request METEORGAME STONE REINIT GAME PLAY 80
+	 */
+	public static final int _REQUEST_PANGPANG_REINIT_GAME_PLAY = 0x00000050;
+
+	/**
+	 * Answer METEORGAME STONE REINIT GAME PLAY 81
+	 */
+	public static final int _ANSWER_PANGPANG_REINIT_GAME_PLAY = 0x00000051;
+	
+    /**
+     * Request METEORGAME STONE REINIT GAME PLAY 82
+     */
+    public static final int _ANSWER_PANGPANG_PLAY_START = 0x00000052;
+    
+	/**
+	 * Request METEORGAME STONE REINIT GAME PLAY 83
+	 */
+	public static final int _REQUEST_PANGPANG_PLAYER_MOVING = 0x00000053;
+
+	/**
+	 * Request METEORGAME STONE REINIT GAME PLAY 84
+	 */
+	public static final int _ANSWER_PANGPANG_PLAYER_MOVING = 0x00000054;
+	
 	// Asset Constant
 
 	/**
@@ -451,7 +486,7 @@ public class Settings {
 	 */
 	public static final String sGameStringStyleMeteorGame = "øÓºÆ∞‘¿”";
 
-	public static final String sGameStringStyleSiegeWarefare = "∞¯º∫∞‘¿”";
+	public static final String sGameStringStylePangPang = "∆Œ∆Œ";
 
 	/**
 	 * Game CatchMe Constant Count
@@ -468,7 +503,7 @@ public class Settings {
 	 */
 	public static final int nGameMeteorGame = 3;
 
-	public static final int nGameSiegeWarefare = 4;
+	public static final int nGamePangPang = 4;
 
 	/**
 	 * Game CatchMe Item Left Constant 0

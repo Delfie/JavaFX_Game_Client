@@ -55,9 +55,7 @@ public class GraphicsContextSprite {
     public GraphicsContextSprite(String filename, double startX, double startY, double width,
             double height) {
         Image i = new Image(filename);
-        setImage(i, width, height);
-        imageStartX = 0;
-        imageStartY = 0;
+        setImage(i, startX,startY,width, height);
         positionX = 0;
         positionY = 0;
         velocityX = 0;

@@ -219,6 +219,8 @@ public class GameRoomController implements Initializable {
 
 	private boolean isMeteorGameStartPrepareFinish;
 
+	private boolean isPangPangStartPrepareFinish;
+
 	private int nMeteorGameDestroyCount;
 
 	private boolean isMeteorGameFinishCheck;
@@ -246,6 +248,7 @@ public class GameRoomController implements Initializable {
 		sNowMeteorGameWinner = null;
 		isMeteorGameFinishCheck = true;
 		isMeteorGameStartPrepareFinish = false;
+		isPangPangStartPrepareFinish = false;
 		meteriorGamePlayerPositionX = Settings.ZEROINIT;
 		meteriorGamePlayerPositionY = Settings.ZEROINIT;
 		nMeteorGameDestroyCount = Settings.ZEROINIT;
@@ -489,7 +492,70 @@ public class GameRoomController implements Initializable {
 		anchorPane.getChildren().add(imageview);
 	}
 
-	private void drawSpriteImageView() {
+	private void drawSpriteImageViewPangPang() {
+		client.sendPacket(Settings._REQUEST_PANGPANG_INIT_GAME_PLAY + "", getsRoomName(), client.getClientName());
+
+		Canvas canvas = new Canvas(360, 280);
+
+		anchorPane.getChildren().add(canvas);
+
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+
+		GraphicsContextSprite background = new GraphicsContextSprite("back02.png", 2182, 0, 1091, 672);
+
+		spriteAnimationTimer = new AnimationTimer() {
+
+			Long lastNanoTime = new Long(System.nanoTime());
+
+			public void handle(long currentNanoTime) {
+				// calculate time since last update.
+				double elapsedTime = (currentNanoTime - lastNanoTime) / 1000000000.0;
+				lastNanoTime = currentNanoTime;
+
+				// // game logic
+				if (isPangPangStartPrepareFinish && isGameStart()) {
+
+					if (input.contains("LEFT"))
+						clientMainPlayer.addVelocity(-3, 0);
+					if (input.contains("RIGHT"))
+						clientMainPlayer.addVelocity(3, 0);
+				//	if (input.contains("UP"))
+				//		clientMainPlayer.addVelocity(0, -3);
+					//if (input.contains("DOWN"))
+					//	clientMainPlayer.addVelocity(0, 3);
+				} else if (clientMainPlayer != null)
+					clientMainPlayer.setVelocity(0, 0);
+
+				if (clientMainPlayer != null) {
+					clientMainPlayer.update(elapsedTime);
+
+					if (Math.abs(meteriorGamePlayerPositionX - clientMainPlayer.getPositionX()) > 0.6f
+							|| Math.abs(meteriorGamePlayerPositionY - clientMainPlayer.getPositionY()) > 0.5) {
+						client.sendPacket(Settings._REQUEST_PANGPANG_PLAYER_MOVING + "", getsRoomName(),
+								client.getClientName(), clientMainPlayer.getPositionX() + "",
+								clientMainPlayer.getPositionY() + "");
+						meteriorGamePlayerPositionX = clientMainPlayer.getPositionX();
+						meteriorGamePlayerPositionY = clientMainPlayer.getPositionY();
+					}
+				}
+
+				// render
+				gc.clearRect(0, 0, Settings.fSPRITEGAMEWIDTH, Settings.fSPRITEGAMEHEIGHT);
+				background.render(gc, Settings.nGameAsteroidSceneWidth / 2, Settings.nGameAsteroidSceneHeight / 2,
+						Settings.nGameAsteroidSceneWidth, Settings.nGameAsteroidSceneHeight);
+
+				for (int i = 0; i < players.size(); i++) {
+					players.get(i).render(gc);
+				}
+
+			}
+		};
+
+		spriteAnimationTimer.start();
+
+	}
+
+	private void drawSpriteImageViewMeteor() {
 		client.sendPacket(Settings._REQUEST_METEORGAME_INIT_GAME_PLAY + "", getsRoomName(), client.getClientName());
 
 		// Mapping 사영 시키는 함수 만들것.
@@ -498,10 +564,6 @@ public class GameRoomController implements Initializable {
 		anchorPane.getChildren().add(canvas);
 
 		GraphicsContext gc = canvas.getGraphicsContext2D();
-
-		/*
-		 * player.setPosition(160, 240); player.setImageSize(30, 30);
-		 */
 
 		anchorPane.getScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
@@ -523,7 +585,7 @@ public class GameRoomController implements Initializable {
 				lastNanoTime = currentNanoTime;
 
 				// game logic
-				if (true == isMeteorGameStartPrepareFinish && true == isGameStart) {
+				if (isMeteorGameStartPrepareFinish && isGameStart()) {
 
 					if (input.contains("LEFT"))
 						clientMainPlayer.addVelocity(-3, 0);
@@ -564,13 +626,12 @@ public class GameRoomController implements Initializable {
 
 					// collision detection
 					for (int j = 0; j < players.size(); j++) {
-						if (players.get(j).intersects(asteroids.get(i)) && true == isMeteorGameStartPrepareFinish) {
+						if (players.get(j).intersects(asteroids.get(i)) && isMeteorGameStartPrepareFinish) {
 
 							client.sendPacket(Settings._REQUEST_METEORGAME_METEOR_DELETE + "", getsRoomName(),
 									players.get(j).getsPlayerName(), asteroids.get(i).getPositionX() + "",
 									asteroids.get(i).getPositionY() + "");
 							break;
-
 						}
 
 					}
@@ -999,6 +1060,26 @@ public class GameRoomController implements Initializable {
 
 	}
 
+	public void initPangPangGamePlayerGamePosition(String[] packet) {
+		if (Settings.ERRORCODE != checkPlayerInTheGame(packet[1]))
+			return;
+
+		Player player = new Player("pangpang_charecter.png", 400, 0, 54, 57);
+		player.setPosition(Double.parseDouble(packet[2]), Double.parseDouble(packet[3]));
+		player.setImageSize(30, 30);
+		player.setsPlayerName(packet[1]);
+		players.add(player);
+
+		for (int i = 0; i < players.size(); i++) {
+			if (players.get(i).getsPlayerName().equals(client.getClientName())) {
+				client.sendPacket(Settings._REQUEST_PANGPANG_REINIT_GAME_PLAY + "", getsRoomName(), packet[1],
+						client.getClientName(), players.get(i).getPositionX() + "", players.get(i).getPositionY() + "");
+				clientMainPlayer = players.get(i);
+			}
+
+		}
+	}
+
 	public void initMeteorGamePlayerGamePosition(String[] packet) {
 		if (Settings.ERRORCODE != checkPlayerInTheGame(packet[1]))
 			return;
@@ -1027,7 +1108,30 @@ public class GameRoomController implements Initializable {
 		return Settings.ERRORCODE;
 	}
 
-	public void initREMeteorGamePlayerGamePosition(String[] packet) {
+	public void initRePangPangGamePlayerGamePosition(String[] packet) {
+		boolean isExisted = false;
+
+		if (client.getClientName().equals(packet[1]))
+			if (!client.getClientName().equals(packet[2])) {
+				for (int i = 0; i < players.size(); i++) {
+					if (players.get(i).getsPlayerName().equals(packet[2])) {
+						isExisted = true;
+						break;
+					}
+				}
+
+				if (isExisted == false) {
+					Player player = new Player("pangpang_charecter.png", 400, 0, 54, 57);
+					player.setPosition(Double.parseDouble(packet[3]), Double.parseDouble(packet[4]));
+					player.setImageSize(30, 30);
+					player.setsPlayerName(packet[2]);
+					players.add(player);
+				}
+			}
+
+	}
+
+	public void initReMeteorGamePlayerGamePosition(String[] packet) {
 		boolean isExisted = false;
 
 		if (client.getClientName().equals(packet[1]))
@@ -1062,6 +1166,11 @@ public class GameRoomController implements Initializable {
 		asteroids.add(asteroid);
 	}
 
+	public void StartPrepareCompletePangPang(String[] packet) {
+		isPangPangStartPrepareFinish = Boolean.parseBoolean(packet[1]);
+		Platform.runLater(() -> displayText("Game Start!!"));
+	}
+
 	public void StartPrepareCompleteMeteorGame(String[] packet) {
 		isMeteorGameStartPrepareFinish = Boolean.parseBoolean(packet[1]);
 		Platform.runLater(() -> displayText("Game Start!!"));
@@ -1069,6 +1178,16 @@ public class GameRoomController implements Initializable {
 
 	// 2 player name 3 position x 4 position y
 	public void updateMeteorGamePlayerPosition(String[] packet) {
+		if (client.getClientName().equals(packet[1]))
+			return;
+
+		for (int i = 0; i < players.size(); i++)
+			if (players.get(i).getsPlayerName().equals(packet[1])) {
+				players.get(i).setPosition(Double.parseDouble(packet[2]), Double.parseDouble(packet[3]));
+			}
+	}
+	
+	public void updatePangPangPlayerPosition(String[] packet) {
 		if (client.getClientName().equals(packet[1]))
 			return;
 
@@ -1497,9 +1616,10 @@ public class GameRoomController implements Initializable {
 			lbPlayerTurn.setVisible(true);
 			lbPlayerTurnBlockText.setText("count : " + nMeteorGameDestroyCount);
 			imageGameMainView.setVisible(false);
-			drawSpriteImageView();
-		} else if (getnGameType() == Settings.nGameSiegeWarefare) {
-			lbGameStyle.setText(Settings.sGameStringStyleSiegeWarefare);
+			drawSpriteImageViewMeteor();
+		} else if (getnGameType() == Settings.nGamePangPang) {
+			lbGameStyle.setText(Settings.sGameStringStylePangPang);
+			drawSpriteImageViewPangPang();
 		}
 
 		client.sendPacket(Settings._REQUEST_GAME_ROOM_MEMEBER_NUMBER + "", sRoomName);

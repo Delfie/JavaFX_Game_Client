@@ -657,7 +657,7 @@ public class WaitingRoomsManagerController implements Initializable {
 		ComboBox<String> gameSytleComboBox = (ComboBox<String>) parent.lookup("#gameStyleComboBox");
 		gameSytleComboBox.setValue(Settings.sGameStringStyleCatchMe);
 		gameSytleComboBox.getItems().addAll(Settings.sGameStringStyleCatchMe, Settings.sGameStringStyleTicTacToc,
-				Settings.sGameStringStyleMeteorGame, Settings.sGameStringStyleSiegeWarefare);
+				Settings.sGameStringStyleMeteorGame, Settings.sGameStringStylePangPang);
 		/*
 		 * check about the clicke event , for selecting game image
 		 */
@@ -680,10 +680,10 @@ public class WaitingRoomsManagerController implements Initializable {
 					Image image = new Image(file.toURI().toString());
 					nSelectedGame = Settings.nGameMeteorGame;
 					imgViewGame.setImage(image);
-				} else if (newValue.equals(Settings.sGameStringStyleSiegeWarefare)) {
+				} else if (newValue.equals(Settings.sGameStringStylePangPang)) {
 					File file = new File("src/Asset/sky64.png");
 					Image image = new Image(file.toURI().toString());
-					nSelectedGame = Settings.nGameSiegeWarefare;
+					nSelectedGame = Settings.nGamePangPang;
 					imgViewGame.setImage(image);
 				}
 			}

@@ -333,8 +333,14 @@ public class ServerClient {
 						((GameRoomController) gameRoomController).initMeteorGamePlayerGamePosition(splitPacket);
 						break;
 
+					case Settings._ANSWER_PANGPANG_INIT_GAME_PLAY:
+						((GameRoomController) gameRoomController).initPangPangGamePlayerGamePosition(splitPacket);
+						break;
 					case Settings._ANSWER_METEORGAME_REINIT_GAME_PLAY:
-						((GameRoomController) gameRoomController).initREMeteorGamePlayerGamePosition(splitPacket);
+						((GameRoomController) gameRoomController).initReMeteorGamePlayerGamePosition(splitPacket);
+						break;
+					case Settings._ANSWER_PANGPANG_REINIT_GAME_PLAY:
+						((GameRoomController) gameRoomController).initRePangPangGamePlayerGamePosition(splitPacket);
 						break;
 
 					case Settings._ANSWER_METEORGAME_OUT_OF_PLAYER:
@@ -350,8 +356,16 @@ public class ServerClient {
 						((GameRoomController) gameRoomController).updateMeteorGamePlayerPosition(splitPacket);
 						break;
 
+					case Settings._ANSWER_PANGPANG_PLAYER_MOVING:
+						((GameRoomController) gameRoomController).updatePangPangPlayerPosition(splitPacket);
+						break;
+						
 					case Settings._ANSWER_METEORGAME_PLAY_START:
 						((GameRoomController) gameRoomController).StartPrepareCompleteMeteorGame(splitPacket);
+						break;
+						
+					case Settings._ANSWER_PANGPANG_PLAY_START:
+						((GameRoomController) gameRoomController).StartPrepareCompletePangPang(splitPacket);
 						break;
 
 					case Settings._ANSWER_METEORGAME_METEOR_DELETE:

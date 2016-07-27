@@ -379,6 +379,10 @@ public class ServerClient {
 					case Settings._ANSWER_PC_CLIENT_VERSION_CHECK:
 						((LoginController) loginController).clientVersionCheck(splitPacket);
 						break;
+						
+					case Settings._ANSWER_METEORGAME_METEOR_PLAYER_SIZE_UP:
+						((GameRoomController) gameRoomController).meteorGamePlayerSizeUP(splitPacket);
+						break;
 
 					// process unExist protocols
 					default:

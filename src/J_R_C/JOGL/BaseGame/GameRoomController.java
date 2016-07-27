@@ -519,15 +519,17 @@ public class GameRoomController implements Initializable {
 						clientMainPlayer.addVelocity(-3, 0);
 					if (input.contains("RIGHT"))
 						clientMainPlayer.addVelocity(3, 0);
-				//	if (input.contains("UP"))
-				//		clientMainPlayer.addVelocity(0, -3);
-					//if (input.contains("DOWN"))
-					//	clientMainPlayer.addVelocity(0, 3);
+					// if (input.contains("UP"))
+					// clientMainPlayer.addVelocity(0, -3);
+					// if (input.contains("DOWN"))
+					// clientMainPlayer.addVelocity(0, 3);
 				} else if (clientMainPlayer != null)
 					clientMainPlayer.setVelocity(0, 0);
 
 				if (clientMainPlayer != null) {
 					clientMainPlayer.update(elapsedTime);
+
+					checkBound();
 
 					if (Math.abs(meteriorGamePlayerPositionX - clientMainPlayer.getPositionX()) > 0.6f
 							|| Math.abs(meteriorGamePlayerPositionY - clientMainPlayer.getPositionY()) > 0.5) {
@@ -573,7 +575,7 @@ public class GameRoomController implements Initializable {
 			}
 		});
 
-		GraphicsContextSprite background = new GraphicsContextSprite("background.png", 320, 480);
+		GraphicsContextSprite background = new GraphicsContextSprite("background.png", 10, 0, 310, 470);
 
 		spriteAnimationTimer = new AnimationTimer() {
 
@@ -600,6 +602,8 @@ public class GameRoomController implements Initializable {
 
 				if (clientMainPlayer != null) {
 					clientMainPlayer.update(elapsedTime);
+
+					checkBound();
 
 					if (Math.abs(meteriorGamePlayerPositionX - clientMainPlayer.getPositionX()) > 1.2f
 							|| Math.abs(meteriorGamePlayerPositionY - clientMainPlayer.getPositionY()) > 0.5) {
@@ -631,6 +635,10 @@ public class GameRoomController implements Initializable {
 							client.sendPacket(Settings._REQUEST_METEORGAME_METEOR_DELETE + "", getsRoomName(),
 									players.get(j).getsPlayerName(), asteroids.get(i).getPositionX() + "",
 									asteroids.get(i).getPositionY() + "");
+
+							client.sendPacket(Settings._REQUEST_METEORGAME_METEOR_PLAYER_SIZE_UP + "", getsRoomName(),
+									players.get(j).getsPlayerName(), players.get(j).getImageSizeX() + "",
+									players.get(j).getImageSizeY() + "");
 							break;
 						}
 
@@ -644,10 +652,27 @@ public class GameRoomController implements Initializable {
 				}
 
 			}
+
 		};
 
 		spriteAnimationTimer.start();
 
+	}
+	
+	private void checkBound() {
+		if (clientMainPlayer.getPositionX() < clientMainPlayer.getImageSizeX() / 2)
+			clientMainPlayer.setPositionX(clientMainPlayer.getImageSizeX() / 2);
+		else if (clientMainPlayer.getPositionX() > Settings.nGameAsteroidSceneWidth
+				- clientMainPlayer.getImageSizeX() / 2)
+			clientMainPlayer
+					.setPositionX(Settings.nGameAsteroidSceneWidth - clientMainPlayer.getImageSizeX() / 2);
+
+		if (clientMainPlayer.getPositionY() < clientMainPlayer.getImageSizeY() / 2)
+			clientMainPlayer.setPositionY(clientMainPlayer.getImageSizeY() / 2);
+		else if (clientMainPlayer.getPositionY() > Settings.nGameAsteroidSceneHeight
+				- clientMainPlayer.getImageSizeY() / 2)
+			clientMainPlayer
+					.setPositionY(Settings.nGameAsteroidSceneHeight - clientMainPlayer.getImageSizeY() / 2);
 	}
 
 	/**
@@ -1186,7 +1211,7 @@ public class GameRoomController implements Initializable {
 				players.get(i).setPosition(Double.parseDouble(packet[2]), Double.parseDouble(packet[3]));
 			}
 	}
-	
+
 	public void updatePangPangPlayerPosition(String[] packet) {
 		if (client.getClientName().equals(packet[1]))
 			return;
@@ -1500,6 +1525,16 @@ public class GameRoomController implements Initializable {
 			}
 
 		});
+	}
+
+	// player /x/y
+	public void meteorGamePlayerSizeUP(String[] packet) {
+		for (int i = 0; i < players.size(); i++)
+			if (players.get(i).getsPlayerName().equals(packet[1])) {
+				players.get(i).setImageSizeX(Double.parseDouble(packet[2]));
+				players.get(i).setImageSizeY(Double.parseDouble(packet[3]));
+			}
+
 	}
 
 	/**

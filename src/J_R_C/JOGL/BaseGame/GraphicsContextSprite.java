@@ -30,6 +30,8 @@ public class GraphicsContextSprite {
 
 	private double height;
 
+	private int nAnimationInterval;
+
 	public GraphicsContextSprite() {
 		imageStartX = 0;
 		imageStartY = 0;
@@ -39,6 +41,7 @@ public class GraphicsContextSprite {
 		velocityY = 0;
 		imageSizeX = 0;
 		imageSizeY = 0;
+		nAnimationInterval = 0;
 	}
 
 	public GraphicsContextSprite(String filename, double width, double height) {
@@ -50,6 +53,7 @@ public class GraphicsContextSprite {
 		positionY = 0;
 		velocityX = 0;
 		velocityY = 0;
+		nAnimationInterval = 0;
 	}
 
 	public GraphicsContextSprite(String filename, double startX, double startY, double width, double height) {
@@ -59,6 +63,7 @@ public class GraphicsContextSprite {
 		positionY = 0;
 		velocityX = 0;
 		velocityY = 0;
+		nAnimationInterval = 0;
 	}
 
 	public void setImage(Image i) {
@@ -147,6 +152,24 @@ public class GraphicsContextSprite {
 	public void render(GraphicsContext gc, double positionXX, double positionYY, double sizeX, double sizeY) {
 		gc.drawImage(image, imageStartX, imageStartY, this.width, this.height, positionXX - sizeX / 2,
 				positionYY - sizeY / 2, sizeX, sizeY);
+	}
+
+	public void renderAnimation(double time, GraphicsContext gc, AnimationManager anMng, double positionXX,
+			double positionYY, double sizeX, double sizeY) {
+
+		nAnimationInterval += time;
+
+		if (nAnimationInterval >= anMng.getAnimationChangeTime()) {
+			nAnimationInterval = 0;
+			anMng.increaseIndicationSpriteNumber();
+		}
+
+		gc.drawImage(anMng.getImage(), anMng.getAnimationsprites(anMng.getnIndicationSpriteNumber()).getImageStartX(),
+				anMng.getAnimationsprites(anMng.getnIndicationSpriteNumber()).getImageStartY(),
+				anMng.getAnimationsprites(anMng.getnIndicationSpriteNumber()).getImageSizeX(),
+				anMng.getAnimationsprites(anMng.getnIndicationSpriteNumber()).getImageSizeY(), positionXX - sizeX / 2,
+				positionYY - sizeY / 2, sizeX, sizeY);
+
 	}
 
 	public Circle getBoundary() {

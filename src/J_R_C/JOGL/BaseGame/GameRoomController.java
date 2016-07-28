@@ -519,15 +519,14 @@ public class GameRoomController implements Initializable {
 						clientMainPlayer.addVelocity(-3, 0);
 					if (input.contains("RIGHT"))
 						clientMainPlayer.addVelocity(3, 0);
-					// if (input.contains("UP"))
-					// clientMainPlayer.addVelocity(0, -3);
-					// if (input.contains("DOWN"))
-					// clientMainPlayer.addVelocity(0, 3);
+					if (input.contains("UP"))
+						clientMainPlayer.setVelocity(0, 0);
 				} else if (clientMainPlayer != null)
 					clientMainPlayer.setVelocity(0, 0);
 
 				if (clientMainPlayer != null) {
 					clientMainPlayer.update(elapsedTime);
+					// update 하면서 자동으로 sprite image가 바뀌게 업데이트 할 것.
 
 					checkBound();
 
@@ -658,21 +657,19 @@ public class GameRoomController implements Initializable {
 		spriteAnimationTimer.start();
 
 	}
-	
+
 	private void checkBound() {
 		if (clientMainPlayer.getPositionX() < clientMainPlayer.getImageSizeX() / 2)
 			clientMainPlayer.setPositionX(clientMainPlayer.getImageSizeX() / 2);
 		else if (clientMainPlayer.getPositionX() > Settings.nGameAsteroidSceneWidth
 				- clientMainPlayer.getImageSizeX() / 2)
-			clientMainPlayer
-					.setPositionX(Settings.nGameAsteroidSceneWidth - clientMainPlayer.getImageSizeX() / 2);
+			clientMainPlayer.setPositionX(Settings.nGameAsteroidSceneWidth - clientMainPlayer.getImageSizeX() / 2);
 
 		if (clientMainPlayer.getPositionY() < clientMainPlayer.getImageSizeY() / 2)
 			clientMainPlayer.setPositionY(clientMainPlayer.getImageSizeY() / 2);
 		else if (clientMainPlayer.getPositionY() > Settings.nGameAsteroidSceneHeight
 				- clientMainPlayer.getImageSizeY() / 2)
-			clientMainPlayer
-					.setPositionY(Settings.nGameAsteroidSceneHeight - clientMainPlayer.getImageSizeY() / 2);
+			clientMainPlayer.setPositionY(Settings.nGameAsteroidSceneHeight - clientMainPlayer.getImageSizeY() / 2);
 	}
 
 	/**
@@ -1109,7 +1106,9 @@ public class GameRoomController implements Initializable {
 		if (Settings.ERRORCODE != checkPlayerInTheGame(packet[1]))
 			return;
 
-		Player player = new Player("box.png", 100, 100);
+		Player player;
+
+		player = initMeteorPlayerColor(packet[1]);
 		player.setPosition(Double.parseDouble(packet[2]), Double.parseDouble(packet[3]));
 		player.setImageSize(30, 30);
 		player.setsPlayerName(packet[1]);
@@ -1124,6 +1123,15 @@ public class GameRoomController implements Initializable {
 
 		}
 
+	}
+
+	private Player initMeteorPlayerColor(String packet) {
+		Player player;
+		if (client.getClientName().equals(packet))
+			player = new Player("box.png", 0, 0, 100, 100);
+		else
+			player = new Player("box.png", 100, 0, 100, 100);
+		return player;
 	}
 
 	private int checkPlayerInTheGame(String name) {
@@ -1167,9 +1175,12 @@ public class GameRoomController implements Initializable {
 						break;
 					}
 				}
+				Player player;
 
 				if (isExisted == false) {
-					Player player = new Player("box.png", 100, 100);
+
+					player = initMeteorPlayerColor(packet[2]);
+
 					player.setPosition(Double.parseDouble(packet[3]), Double.parseDouble(packet[4]));
 					player.setImageSize(30, 30);
 					player.setsPlayerName(packet[2]);

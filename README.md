@@ -10,4 +10,4 @@ you must follow below steps.
 
 2.set ip address and port in Settings.java.
 
-if you have a question or curious some thing. if so, Don't hesitate to send to me a e-mail at jrcright1004@gmail.com. Thank you.
+if you have a question or curious something. if so, Don't hesitate to send to me a e-mail at jrcright1004@gmail.com. Thank you.

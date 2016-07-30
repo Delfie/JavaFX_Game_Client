@@ -347,6 +347,11 @@ public class ServerClient {
 						if (!splitPacket[1].equals(getClientName()))
 							((GameRoomController) gameRoomController).outOfPlayerInMeteorGame(splitPacket);
 						break;
+						
+					case Settings._ANSWER_PANGPANG_OUT_OF_PLAYER:
+						if (!splitPacket[1].equals(getClientName()))
+							((GameRoomController) gameRoomController).outOfPlayerInPangPang(splitPacket);
+						break;
 
 					case Settings._ANSWER_METEORGAME_UNIVERSE_INIT:
 						((GameRoomController) gameRoomController).initMeteorGameWhenStartGame(splitPacket);

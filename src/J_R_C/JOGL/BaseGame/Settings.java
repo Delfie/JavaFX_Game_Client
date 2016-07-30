@@ -447,6 +447,17 @@ public class Settings {
 	 */
 	public static final int _ANSWER_METEORGAME_METEOR_PLAYER_SIZE_UP = 0x00000056;
 	
+	/**
+	 * Request METEORGAME STONE REINIT GAME PLAY 87
+	 */
+	public static final int _REQUEST_PANGPANG_OUT_OF_PLAYER = 0x00000057;
+	
+	/**
+	 * Request METEORGAME STONE REINIT GAME PLAY 88
+	 */
+	public static final int _ANSWER_PANGPANG_OUT_OF_PLAYER = 0x00000058;
+
+	
 	// Asset Constant
 
 	/**

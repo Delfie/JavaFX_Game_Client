@@ -260,6 +260,18 @@ public class WaitingRoomsManagerController implements Initializable {
 								File file = new File("src/Asset/grass64.png");
 								Image image = new Image(file.toURI().toString());
 								imageGameMainView.setImage(image);
+							} else if (Settings.nGameMeteorGame == gameType) {
+
+								lbGameStyle.setText(Settings.sGameStringStyleMeteorGame);
+								File file = new File("src/Asset/sky64.png");
+								Image image = new Image(file.toURI().toString());
+								imageGameMainView.setImage(image);
+							} else if (Settings.nGamePangPang == gameType) {
+
+								lbGameStyle.setText(Settings.sGameStringStylePangPang);
+								File file = new File("src/Asset/grass64.png");
+								Image image = new Image(file.toURI().toString());
+								imageGameMainView.setImage(image);
 							}
 
 						// request about room member number to server

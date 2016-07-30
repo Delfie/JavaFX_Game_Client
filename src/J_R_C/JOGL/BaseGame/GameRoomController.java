@@ -894,6 +894,10 @@ public class GameRoomController implements Initializable {
 			spriteAnimationTimer.stop();
 			client.sendPacket(Settings._REQUEST_METEORGAME_OUT_OF_PLAYER + "", getsRoomName(), client.getClientName());
 
+		} else if (getnGameType() == Settings.nGamePangPang) {
+			spriteAnimationTimer.stop();
+			client.sendPacket(Settings._REQUEST_PANGPANG_OUT_OF_PLAYER + "", getsRoomName(), client.getClientName());
+
 		}
 		Stage stage = (Stage) btnCancel.getScene().getWindow();
 
@@ -1115,7 +1119,7 @@ public class GameRoomController implements Initializable {
 	}
 
 	public void initPangPangGamePlayerGamePosition(String[] packet) {
-		if (Settings.ERRORCODE != checkPlayerInTheGame(packet[1]))
+		if (Settings.ERRORCODE != checkPlayerInThePangPang(packet[1]))
 			return;
 
 		PangPangPlayer player = new PangPangPlayer("pangpang_charecter.png", 400, 0, 54, 57);
@@ -1137,7 +1141,7 @@ public class GameRoomController implements Initializable {
 	}
 
 	public void initMeteorGamePlayerGamePosition(String[] packet) {
-		if (Settings.ERRORCODE != checkPlayerInTheGame(packet[1]))
+		if (Settings.ERRORCODE != checkPlayerInTheMeteorGame(packet[1]))
 			return;
 
 		Player player;
@@ -1168,9 +1172,16 @@ public class GameRoomController implements Initializable {
 		return player;
 	}
 
-	private int checkPlayerInTheGame(String name) {
+	private int checkPlayerInTheMeteorGame(String name) {
 		for (int i = 0; i < players.size(); i++)
 			if (players.get(i).getsPlayerName().equals(name))
+				return i;
+		return Settings.ERRORCODE;
+	}
+	
+	private int checkPlayerInThePangPang(String name) {
+		for (int i = 0; i < pangPangPlayers.size(); i++)
+			if (pangPangPlayers.get(i).getsPlayerName().equals(name))
 				return i;
 		return Settings.ERRORCODE;
 	}
@@ -1226,7 +1237,11 @@ public class GameRoomController implements Initializable {
 	}
 
 	public void outOfPlayerInMeteorGame(String[] packet) {
-		players.remove(checkPlayerInTheGame(packet[1]));
+		players.remove(checkPlayerInTheMeteorGame(packet[1]));
+	}
+	
+	public void outOfPlayerInPangPang(String[] packet) {
+		pangPangPlayers.remove(checkPlayerInThePangPang(packet[1]));
 	}
 
 	public void initMeteorGameWhenStartGame(String[] packet) {

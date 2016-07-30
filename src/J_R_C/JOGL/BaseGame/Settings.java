@@ -456,6 +456,11 @@ public class Settings {
 	 * Request METEORGAME STONE REINIT GAME PLAY 88
 	 */
 	public static final int _ANSWER_PANGPANG_OUT_OF_PLAYER = 0x00000058;
+	
+	/**
+	 * Request METEORGAME STONE REINIT GAME PLAY 89
+	 */
+	public static final int _ANSWER_PANGPANG_ENEMY_EVENT = 0x00000059;
 
 	
 	// Asset Constant
@@ -637,8 +642,12 @@ public class Settings {
 	public static final float fSPRITEGAMEHEIGHT = 480;
 
 	public static final String sEncryptKey = "fe8025947de7cd71";
+	
+	public static final String ALGO = "AES";
+    
+	public static final String keyStr = "Z8LSq0wWwB5v+6YJzurcP463H3F12iZh74fDj4S74oUH4EONkiKb2FmiWUbtFh97GG/c/lbDE47mvw6j94yXxKHOpoqu6zpLKMKPcOoSppcVWb2q34qENBJkudXUh4MWcreondLmLL2UyydtFKuU9Sa5VgY/CzGaVGJABK2ZR94=";
 
-	public static int nReceiveBufferSize = 1000;
+	public static int nReceiveBufferSize = 10000;
 
 	public static String clientVersion = "0.0.1v";
 

@@ -1178,7 +1178,7 @@ public class GameRoomController implements Initializable {
 				return i;
 		return Settings.ERRORCODE;
 	}
-	
+
 	private int checkPlayerInThePangPang(String name) {
 		for (int i = 0; i < pangPangPlayers.size(); i++)
 			if (pangPangPlayers.get(i).getsPlayerName().equals(name))
@@ -1239,7 +1239,7 @@ public class GameRoomController implements Initializable {
 	public void outOfPlayerInMeteorGame(String[] packet) {
 		players.remove(checkPlayerInTheMeteorGame(packet[1]));
 	}
-	
+
 	public void outOfPlayerInPangPang(String[] packet) {
 		pangPangPlayers.remove(checkPlayerInThePangPang(packet[1]));
 	}
@@ -1587,6 +1587,14 @@ public class GameRoomController implements Initializable {
 			}
 
 		});
+	}
+
+	public void pangpangEnemyPositionUpdate(String[] packet) {
+		System.out.println(packet[1]);
+		String sPositionSet[] = packet[1].split("!!");
+		System.out.println(sPositionSet[1]);
+		String sSubPosition[] = sPositionSet[1].split(">!");
+		System.out.println(sSubPosition[0] + " " + sSubPosition[1]);
 	}
 
 	// player /x/y

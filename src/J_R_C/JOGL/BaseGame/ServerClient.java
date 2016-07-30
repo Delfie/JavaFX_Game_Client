@@ -347,7 +347,7 @@ public class ServerClient {
 						if (!splitPacket[1].equals(getClientName()))
 							((GameRoomController) gameRoomController).outOfPlayerInMeteorGame(splitPacket);
 						break;
-						
+
 					case Settings._ANSWER_PANGPANG_OUT_OF_PLAYER:
 						if (!splitPacket[1].equals(getClientName()))
 							((GameRoomController) gameRoomController).outOfPlayerInPangPang(splitPacket);
@@ -364,11 +364,11 @@ public class ServerClient {
 					case Settings._ANSWER_PANGPANG_PLAYER_MOVING:
 						((GameRoomController) gameRoomController).updatePangPangPlayerPosition(splitPacket);
 						break;
-						
+
 					case Settings._ANSWER_METEORGAME_PLAY_START:
 						((GameRoomController) gameRoomController).StartPrepareCompleteMeteorGame(splitPacket);
 						break;
-						
+
 					case Settings._ANSWER_PANGPANG_PLAY_START:
 						((GameRoomController) gameRoomController).StartPrepareCompletePangPang(splitPacket);
 						break;
@@ -384,9 +384,13 @@ public class ServerClient {
 					case Settings._ANSWER_PC_CLIENT_VERSION_CHECK:
 						((LoginController) loginController).clientVersionCheck(splitPacket);
 						break;
-						
+
 					case Settings._ANSWER_METEORGAME_METEOR_PLAYER_SIZE_UP:
 						((GameRoomController) gameRoomController).meteorGamePlayerSizeUP(splitPacket);
+						break;
+
+					case Settings._ANSWER_PANGPANG_ENEMY_EVENT:
+						((GameRoomController) gameRoomController).pangpangEnemyPositionUpdate(splitPacket);
 						break;
 
 					// process unExist protocols

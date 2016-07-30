@@ -209,9 +209,13 @@ public class GameRoomController implements Initializable {
 
 	private ArrayList<Player> players = new ArrayList<Player>();
 
+	private ArrayList<PangPangPlayer> pangPangPlayers = new ArrayList<PangPangPlayer>();
+
 	private ArrayList<Player> asteroids = new ArrayList<Player>();
 
 	private Player clientMainPlayer;
+
+	private PangPangPlayer clientPangPangMainPlayer;
 
 	private double meteriorGamePlayerPositionX;
 
@@ -503,6 +507,18 @@ public class GameRoomController implements Initializable {
 
 		GraphicsContextSprite background = new GraphicsContextSprite("back02.png", 2182, 0, 1091, 672);
 
+		PangPangPlayer
+				.setPlayerLeftImage(new AnimationManager("pangpang_charecter.png", new AnimationSprite(100, 0, 28, 56),
+						new AnimationSprite(200, 0, 28, 56), new AnimationSprite(300, 0, 28, 56)));
+
+		PangPangPlayer.getPlayerLeftImage().setAnimationChangeTime(0.2);
+
+		PangPangPlayer
+				.setPlayerRihgtImage(new AnimationManager("pangpang_charecter.png", new AnimationSprite(150, 0, 28, 56),
+						new AnimationSprite(250, 0, 28, 56), new AnimationSprite(350, 0, 28, 56)));
+
+		PangPangPlayer.getPlayerRightImage().setAnimationChangeTime(0.2);
+
 		spriteAnimationTimer = new AnimationTimer() {
 
 			Long lastNanoTime = new Long(System.nanoTime());
@@ -516,27 +532,33 @@ public class GameRoomController implements Initializable {
 				if (isPangPangStartPrepareFinish && isGameStart()) {
 
 					if (input.contains("LEFT"))
-						clientMainPlayer.addVelocity(-3, 0);
+						clientPangPangMainPlayer.addVelocity(-3, 0);
 					if (input.contains("RIGHT"))
-						clientMainPlayer.addVelocity(3, 0);
-					if (input.contains("UP"))
-						clientMainPlayer.setVelocity(0, 0);
-				} else if (clientMainPlayer != null)
-					clientMainPlayer.setVelocity(0, 0);
+						clientPangPangMainPlayer.addVelocity(3, 0);
+					if (input.contains("UP")) {
+						clientPangPangMainPlayer.setVelocity(0, 0);
+						client.sendPacket(Settings._REQUEST_PANGPANG_PLAYER_MOVING + "", getsRoomName(),
+								client.getClientName(), clientPangPangMainPlayer.getPositionX() + "",
+								clientPangPangMainPlayer.getPositionY() + "",
+								clientPangPangMainPlayer.getDirection() + "");
+					}
+				} else if (clientPangPangMainPlayer != null)
+					clientPangPangMainPlayer.setVelocity(0, 0);
 
-				if (clientMainPlayer != null) {
-					clientMainPlayer.update(elapsedTime);
+				if (clientPangPangMainPlayer != null) {
+					clientPangPangMainPlayer.update(elapsedTime);
 					// update 하면서 자동으로 sprite image가 바뀌게 업데이트 할 것.
 
-					checkBound();
+					checkBound(clientPangPangMainPlayer);
 
-					if (Math.abs(meteriorGamePlayerPositionX - clientMainPlayer.getPositionX()) > 0.6f
-							|| Math.abs(meteriorGamePlayerPositionY - clientMainPlayer.getPositionY()) > 0.5) {
+					if (Math.abs(meteriorGamePlayerPositionX - clientPangPangMainPlayer.getPositionX()) > 0.6f
+							|| Math.abs(meteriorGamePlayerPositionY - clientPangPangMainPlayer.getPositionY()) > 0.5) {
 						client.sendPacket(Settings._REQUEST_PANGPANG_PLAYER_MOVING + "", getsRoomName(),
-								client.getClientName(), clientMainPlayer.getPositionX() + "",
-								clientMainPlayer.getPositionY() + "");
-						meteriorGamePlayerPositionX = clientMainPlayer.getPositionX();
-						meteriorGamePlayerPositionY = clientMainPlayer.getPositionY();
+								client.getClientName(), clientPangPangMainPlayer.getPositionX() + "",
+								clientPangPangMainPlayer.getPositionY() + "",
+								clientPangPangMainPlayer.getDirection() + "");
+						meteriorGamePlayerPositionX = clientPangPangMainPlayer.getPositionX();
+						meteriorGamePlayerPositionY = clientPangPangMainPlayer.getPositionY();
 					}
 				}
 
@@ -545,9 +567,21 @@ public class GameRoomController implements Initializable {
 				background.render(gc, Settings.nGameAsteroidSceneWidth / 2, Settings.nGameAsteroidSceneHeight / 2,
 						Settings.nGameAsteroidSceneWidth, Settings.nGameAsteroidSceneHeight);
 
-				for (int i = 0; i < players.size(); i++) {
-					players.get(i).render(gc);
+				for (int i = 0; i < pangPangPlayers.size(); i++) {
+					if (pangPangPlayers.get(i).getDirection() == GraphicsContextSprite.LEFT) {
+						pangPangPlayers.get(i);
+						PangPangPlayer.getPlayerLeftImage().renderAnimation(elapsedTime, gc,
+								pangPangPlayers.get(i).getPositionX(), pangPangPlayers.get(i).getPositionY(), 17, 30);
+					} else if (pangPangPlayers.get(i).getDirection() == GraphicsContextSprite.RIGHT) {
+						pangPangPlayers.get(i);
+						PangPangPlayer.getPlayerRightImage().renderAnimation(elapsedTime, gc,
+								pangPangPlayers.get(i).getPositionX(), pangPangPlayers.get(i).getPositionY(), 17, 30);
+					} else if (pangPangPlayers.get(i).getDirection() == GraphicsContextSprite.UP)
+						pangPangPlayers.get(i).render(gc);
 				}
+
+				// PlayerLeftImage.renderAnimation(elapsedTime, gc, 50, 50, 17,
+				// 30);
 
 			}
 		};
@@ -602,7 +636,7 @@ public class GameRoomController implements Initializable {
 				if (clientMainPlayer != null) {
 					clientMainPlayer.update(elapsedTime);
 
-					checkBound();
+					checkBound(clientMainPlayer);
 
 					if (Math.abs(meteriorGamePlayerPositionX - clientMainPlayer.getPositionX()) > 1.2f
 							|| Math.abs(meteriorGamePlayerPositionY - clientMainPlayer.getPositionY()) > 0.5) {
@@ -658,18 +692,16 @@ public class GameRoomController implements Initializable {
 
 	}
 
-	private void checkBound() {
-		if (clientMainPlayer.getPositionX() < clientMainPlayer.getImageSizeX() / 2)
-			clientMainPlayer.setPositionX(clientMainPlayer.getImageSizeX() / 2);
-		else if (clientMainPlayer.getPositionX() > Settings.nGameAsteroidSceneWidth
-				- clientMainPlayer.getImageSizeX() / 2)
-			clientMainPlayer.setPositionX(Settings.nGameAsteroidSceneWidth - clientMainPlayer.getImageSizeX() / 2);
+	private void checkBound(GraphicsContextSprite playerBound) {
+		if (playerBound.getPositionX() < playerBound.getImageSizeX() / 2)
+			playerBound.setPositionX(playerBound.getImageSizeX() / 2);
+		else if (playerBound.getPositionX() > Settings.nGameAsteroidSceneWidth - playerBound.getImageSizeX() / 2)
+			playerBound.setPositionX(Settings.nGameAsteroidSceneWidth - playerBound.getImageSizeX() / 2);
 
-		if (clientMainPlayer.getPositionY() < clientMainPlayer.getImageSizeY() / 2)
-			clientMainPlayer.setPositionY(clientMainPlayer.getImageSizeY() / 2);
-		else if (clientMainPlayer.getPositionY() > Settings.nGameAsteroidSceneHeight
-				- clientMainPlayer.getImageSizeY() / 2)
-			clientMainPlayer.setPositionY(Settings.nGameAsteroidSceneHeight - clientMainPlayer.getImageSizeY() / 2);
+		if (playerBound.getPositionY() < playerBound.getImageSizeY() / 2)
+			playerBound.setPositionY(playerBound.getImageSizeY() / 2);
+		else if (playerBound.getPositionY() > Settings.nGameAsteroidSceneHeight - playerBound.getImageSizeY() / 2)
+			playerBound.setPositionY(Settings.nGameAsteroidSceneHeight - playerBound.getImageSizeY() / 2);
 	}
 
 	/**
@@ -1086,17 +1118,19 @@ public class GameRoomController implements Initializable {
 		if (Settings.ERRORCODE != checkPlayerInTheGame(packet[1]))
 			return;
 
-		Player player = new Player("pangpang_charecter.png", 400, 0, 54, 57);
+		PangPangPlayer player = new PangPangPlayer("pangpang_charecter.png", 400, 0, 54, 57);
 		player.setPosition(Double.parseDouble(packet[2]), Double.parseDouble(packet[3]));
 		player.setImageSize(30, 30);
 		player.setsPlayerName(packet[1]);
-		players.add(player);
+		player.setDirection(PangPangPlayer.UP);
+		pangPangPlayers.add(player);
 
-		for (int i = 0; i < players.size(); i++) {
-			if (players.get(i).getsPlayerName().equals(client.getClientName())) {
+		for (int i = 0; i < pangPangPlayers.size(); i++) {
+			if (pangPangPlayers.get(i).getsPlayerName().equals(client.getClientName())) {
 				client.sendPacket(Settings._REQUEST_PANGPANG_REINIT_GAME_PLAY + "", getsRoomName(), packet[1],
-						client.getClientName(), players.get(i).getPositionX() + "", players.get(i).getPositionY() + "");
-				clientMainPlayer = players.get(i);
+						client.getClientName(), pangPangPlayers.get(i).getPositionX() + "",
+						pangPangPlayers.get(i).getPositionY() + "");
+				clientPangPangMainPlayer = pangPangPlayers.get(i);
 			}
 
 		}
@@ -1146,19 +1180,20 @@ public class GameRoomController implements Initializable {
 
 		if (client.getClientName().equals(packet[1]))
 			if (!client.getClientName().equals(packet[2])) {
-				for (int i = 0; i < players.size(); i++) {
-					if (players.get(i).getsPlayerName().equals(packet[2])) {
+				for (int i = 0; i < pangPangPlayers.size(); i++) {
+					if (pangPangPlayers.get(i).getsPlayerName().equals(packet[2])) {
 						isExisted = true;
 						break;
 					}
 				}
 
 				if (isExisted == false) {
-					Player player = new Player("pangpang_charecter.png", 400, 0, 54, 57);
+					PangPangPlayer player = new PangPangPlayer("pangpang_charecter.png", 400, 0, 54, 57);
 					player.setPosition(Double.parseDouble(packet[3]), Double.parseDouble(packet[4]));
+					player.setDirection(PangPangPlayer.UP);
 					player.setImageSize(30, 30);
 					player.setsPlayerName(packet[2]);
-					players.add(player);
+					pangPangPlayers.add(player);
 				}
 			}
 
@@ -1227,9 +1262,10 @@ public class GameRoomController implements Initializable {
 		if (client.getClientName().equals(packet[1]))
 			return;
 
-		for (int i = 0; i < players.size(); i++)
-			if (players.get(i).getsPlayerName().equals(packet[1])) {
-				players.get(i).setPosition(Double.parseDouble(packet[2]), Double.parseDouble(packet[3]));
+		for (int i = 0; i < pangPangPlayers.size(); i++)
+			if (pangPangPlayers.get(i).getsPlayerName().equals(packet[1])) {
+				pangPangPlayers.get(i).setPosition(Double.parseDouble(packet[2]), Double.parseDouble(packet[3]));
+				pangPangPlayers.get(i).setDirection(Integer.parseInt(packet[4]));
 			}
 	}
 

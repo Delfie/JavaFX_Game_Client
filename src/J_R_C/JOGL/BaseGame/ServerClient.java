@@ -395,6 +395,11 @@ public class ServerClient {
 					case Settings._ANSWER_PANGPANG_ENEMY_EVENT:
 						((GameRoomController) gameRoomController).pangpangEnemyPositionUpdate(splitPacket);
 						break;
+						
+					case Settings._ANSWER_PANGPANG_ENEMY_INIT:
+						((GameRoomController) gameRoomController).pangpangEnemyInit(splitPacket);
+						break;
+						
 
 					// process unExist protocols
 					default:

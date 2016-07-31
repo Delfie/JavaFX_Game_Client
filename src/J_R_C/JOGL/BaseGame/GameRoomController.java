@@ -14,6 +14,7 @@ import GraphicUtility.AnimationManager;
 import GraphicUtility.AnimationSprite;
 import GraphicUtility.GraphicsContextSprite;
 import GraphicUtility.Sprite;
+import Object.PangPangEnemy;
 import Object.PangPangPlayer;
 import Object.Player;
 import javafx.animation.AnimationTimer;
@@ -219,7 +220,7 @@ public class GameRoomController implements Initializable {
 
 	private ArrayList<Player> asteroids = new ArrayList<Player>();
 
-	private ArrayList<Player> bubbles = new ArrayList<Player>();
+	private ArrayList<PangPangEnemy> bubbles = new ArrayList<PangPangEnemy>();
 
 	private Player clientMainPlayer;
 
@@ -1280,7 +1281,7 @@ public class GameRoomController implements Initializable {
 	public void initPangPangBubbles() {
 		for (int i = 0; i < Settings.nPangPangEnemyHeight; i++)
 			for (int j = 0; j < Settings.nPangPangEnemyWidth; j++) {
-				Player bubble = new Player("/Asset/box.png", 0, 100, 100, 100);
+				PangPangEnemy bubble = new PangPangEnemy("/Asset/box.png", 0, 100, 100, 100);
 				bubble.setImageSize(20, 20);
 				bubble.setsPlayerName("bubble" + (i * Settings.nPangPangEnemyWidth + j));
 				bubbles.add(bubble);
@@ -1628,13 +1629,33 @@ public class GameRoomController implements Initializable {
 			for (int i = 1; i < sPositionSet.length; i++) {
 				String sSubPosition[] = sPositionSet[i].split(Settings.sPangPangPositionCoordinationToken);
 
-				if (isPangPangStartPrepareFinish)
-					bubbles.get(i - 1).setPosition(Double.parseDouble(sSubPosition[0]),
-							Double.parseDouble(sSubPosition[1]));
+				for (int j = 0; j < bubbles.size(); j++)
+					if (isPangPangStartPrepareFinish && bubbles.get(j).getsPlayerName().equals(sSubPosition[0])) {
+						bubbles.get(j).setPosition(Double.parseDouble(sSubPosition[1]),
+								Double.parseDouble(sSubPosition[2]));
+						break;
+					}
 			}
 
 		}
 		isPangPangEnemyStackRunning = false;
+	}
+
+	public void pangpangEnemyInit(String[] packet) {
+
+		String sPositionSet[] = packet[1].split(Settings.sPangPangPositionInformationWordToken);
+
+		for (int i = 1; i < sPositionSet.length; i++) {
+			String sSubPosition[] = sPositionSet[i].split(Settings.sPangPangPositionCoordinationToken);
+
+			for (int j = 0; j < bubbles.size(); j++)
+				if (bubbles.get(j).getsPlayerName().equals(sSubPosition[0])) {
+					bubbles.get(j).setImageTypeNumber(Integer.parseInt(sSubPosition[1]));
+					bubbles.get(j).setDeath(Boolean.parseBoolean(sSubPosition[2]));
+					break;
+				}
+		}
+
 	}
 
 	public void pangpangEnemyPositionUpdate(String[] packet) {

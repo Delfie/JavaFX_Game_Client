@@ -664,6 +664,10 @@ public class Settings {
 	public static final String sSenderSplitMultipleToken = "@";
 
 	public static final String sReceiverSplitMultipleToken = "@";
+	
+    public static final String sPangPangPositionInformationWordToken = "!!";
+    
+    public static final String sPangPangPositionCoordinationToken = ">!";
 
 	public static boolean isClientVersionCheck = false;
 

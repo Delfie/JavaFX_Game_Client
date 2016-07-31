@@ -1590,10 +1590,12 @@ public class GameRoomController implements Initializable {
 	}
 
 	public void pangpangEnemyPositionUpdate(String[] packet) {
+		// enemy Unit initialization part.
+		
 		System.out.println(packet[1]);
-		String sPositionSet[] = packet[1].split("!!");
+		String sPositionSet[] = packet[1].split(Settings.sPangPangPositionInformationWordToken);
 		System.out.println(sPositionSet[1]);
-		String sSubPosition[] = sPositionSet[1].split(">!");
+		String sSubPosition[] = sPositionSet[1].split(Settings.sPangPangPositionCoordinationToken);
 		System.out.println(sSubPosition[0] + " " + sSubPosition[1]);
 	}
 

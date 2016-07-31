@@ -17,6 +17,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Hex;
 
+import GraphicUtility.SplitPacketManager;
+import Utility.EncryptionManager;
+
 /**
  * @author KJW finish at 2016/ 02/ 15
  * @version 1.0.0v
@@ -181,7 +184,7 @@ public class ServerClient {
 				 * processing all packet using next method for splitting the
 				 * packet
 				 */
-				String[] multiplePackets = SplitPacketManager.splitMultiplePacket(EncryptionManager.decrypt(data));
+				String[] multiplePackets = SplitPacketManager.splitMultiplePacket(EncryptionManager.decrypt64bits(data));
 
 				for (int i = 0; i < multiplePackets.length; i++) {
 
@@ -194,7 +197,7 @@ public class ServerClient {
 					int protocol = Integer.parseInt(splitPacket[0]);
 
 					if (protocol != Settings._ANSWER_GAME_ROOM_LIST && protocol != Settings._ANSWER_ROOM_MEMBER_NUMBER)
-						System.out.println("receive the Packet " + EncryptionManager.decrypt(data));
+						System.out.println("receive the Packet " + EncryptionManager.decrypt64bits(data));
 
 					switch (protocol) {
 					// if client exit the game room
@@ -441,7 +444,7 @@ public class ServerClient {
 			@Override
 			public void run() {
 				try {
-					byte[] byteArr = EncryptionManager.encrypt(data).getBytes("UTF-8");
+					byte[] byteArr = EncryptionManager.encrypt64bits(data).getBytes("UTF-8");
 					outputStream = socket.getOutputStream();
 					outputStream.write(byteArr);
 					outputStream.flush();

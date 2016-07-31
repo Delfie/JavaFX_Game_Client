@@ -1,4 +1,4 @@
-package J_R_C.JOGL.BaseGame;
+package GraphicUtility;
 
 public class AnimationSprite {
 	private double imageStartX;

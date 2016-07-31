@@ -1,5 +1,7 @@
 
-package J_R_C.JOGL.BaseGame;
+package Object;
+
+import GraphicUtility.GraphicsContextSprite;
 
 public class Player extends GraphicsContextSprite {
 

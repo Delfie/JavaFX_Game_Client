@@ -1,5 +1,8 @@
 
-package J_R_C.JOGL.BaseGame;
+package Object;
+
+import GraphicUtility.AnimationManager;
+import GraphicUtility.GraphicsContextSprite;
 
 public class PangPangPlayer extends GraphicsContextSprite {
 

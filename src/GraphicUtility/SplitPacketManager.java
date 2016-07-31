@@ -1,8 +1,10 @@
-package J_R_C.JOGL.BaseGame;
+package GraphicUtility;
+
+import J_R_C.JOGL.BaseGame.Settings;
 
 public class SplitPacketManager {
 	
-	static String[] splitMultiplePacket(String packet) {
+	public static String[] splitMultiplePacket(String packet) {
 
 		String _partitioningPacket[] = packet.split(Settings.sReceiverSplitMultipleToken);
 		return _partitioningPacket;
@@ -15,7 +17,7 @@ public class SplitPacketManager {
 	 * @param packet
 	 * @return
 	 */
-	static String[] splitProtocol(String packet) {
+	public static String[] splitProtocol(String packet) {
 
 		String _partitioningPacket[] = packet.split(Settings.sReceiverSplitProtocolToken);
 

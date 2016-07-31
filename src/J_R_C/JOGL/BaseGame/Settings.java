@@ -672,5 +672,9 @@ public class Settings {
 	public static boolean isClientVersionCheck = false;
 
 	public static final int nMaximumSizeOfCommandsContainer = 20;
+	
+    public static final int nPangPangEnemyWidth = 8;
+    
+    public static final int nPangPangEnemyHeight = 6;
 
 }

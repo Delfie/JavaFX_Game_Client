@@ -1,4 +1,4 @@
-package J_R_C.JOGL.BaseGame;
+package GraphicUtility;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;

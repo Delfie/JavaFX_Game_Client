@@ -465,7 +465,22 @@ public class Settings {
 	 * Request METEORGAME STONE REINIT GAME PLAY 90
 	 */
 	public static final int _ANSWER_PANGPANG_ENEMY_INIT = 0x0000005a;
+	
+	/**
+	 * Request METEORGAME STONE REINIT GAME PLAY 91
+	 */
+	public static final int _ANSWER_PANGAPNG_ENEY_ATTACK = 0x0000005b;
 
+	/**
+	 * Request METEORGAME STONE REINIT GAME PLAY 92
+	 */
+	public static final int _REQUEST_PANGAPNG_ATTACK = 0x0000005c;
+	
+	/**
+	 * Request METEORGAME STONE REINIT GAME PLAY 93
+	 */
+	public static final int _ANSWER_PANGAPNG_ATTACK = 0x0000005d;
+	
 	
 	// Asset Constant
 

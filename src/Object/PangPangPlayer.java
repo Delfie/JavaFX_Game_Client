@@ -18,6 +18,19 @@ public class PangPangPlayer extends GraphicsContextSprite {
 		super(filename, startX, startY, width, height);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public void update(double time) {
+
+		if (nDirection == LEFT)
+			velocityX = -10;
+		else if (nDirection == RIGHT)
+			velocityX = 10;
+		else if (nDirection == UP)
+			velocityX = 0;
+
+		positionX += velocityX * time;
+		positionY += velocityY * time;
+	}
 
 	public static AnimationManager getPlayerLeftImage() {
 		return PlayerLeftImage;
@@ -31,7 +44,7 @@ public class PangPangPlayer extends GraphicsContextSprite {
 		return PlayerRihgtImage;
 	}
 
-	public static void setPlayerRihgtImage(AnimationManager playerRihgtImage) {
+	public static void setPlayerRightImage(AnimationManager playerRihgtImage) {
 		PlayerRihgtImage = playerRihgtImage;
 	}
 

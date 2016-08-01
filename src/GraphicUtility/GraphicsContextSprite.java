@@ -6,31 +6,31 @@ import javafx.scene.image.Image;
 import javafx.scene.shape.Circle;
 
 public class GraphicsContextSprite {
-	private double MAXIMUMSPEED = 10;
+	protected double MAXIMUMSPEED = 10;
 
-	private Image image;
+	protected Image image;
 
-	private double imageStartX;
+	protected double imageStartX;
 
-	private double imageStartY;
+	protected double imageStartY;
 
-	private double positionX;
+	protected double positionX;
 
-	private double positionY;
+	protected double positionY;
 
-	private double velocityX;
+	protected double velocityX;
 
-	private double velocityY;
+	protected double velocityY;
 
-	private double imageSizeX;
+	protected double imageSizeX;
 
-	private double imageSizeY;
+	protected double imageSizeY;
 
-	private double width;
+	protected double width;
 
-	private double height;
+	protected double height;
 
-	private int nDirection;
+	protected int nDirection;
 
 	public static final int LEFT = 1;
 
@@ -61,6 +61,15 @@ public class GraphicsContextSprite {
 	}
 
 	public GraphicsContextSprite(String filename, double startX, double startY, double width, double height) {
+		Image i = new Image(filename);
+		setImage(i, startX, startY, width, height);
+		positionX = 0;
+		positionY = 0;
+		velocityX = 0;
+		velocityY = 0;
+	}
+	
+	public void reInitImage(String filename, double startX, double startY, double width, double height) {
 		Image i = new Image(filename);
 		setImage(i, startX, startY, width, height);
 		positionX = 0;
@@ -156,6 +165,7 @@ public class GraphicsContextSprite {
 
 		positionX += velocityX * time;
 		positionY += velocityY * time;
+		
 	}
 
 	public void render(GraphicsContext gc) {

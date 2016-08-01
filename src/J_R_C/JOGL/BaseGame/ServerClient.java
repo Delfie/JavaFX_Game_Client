@@ -184,7 +184,8 @@ public class ServerClient {
 				 * processing all packet using next method for splitting the
 				 * packet
 				 */
-				String[] multiplePackets = SplitPacketManager.splitMultiplePacket(EncryptionManager.decrypt64bits(data));
+				String[] multiplePackets = SplitPacketManager
+						.splitMultiplePacket(EncryptionManager.decrypt64bits(data));
 
 				for (int i = 0; i < multiplePackets.length; i++) {
 
@@ -196,7 +197,8 @@ public class ServerClient {
 
 					int protocol = Integer.parseInt(splitPacket[0]);
 
-					if (protocol != Settings._ANSWER_GAME_ROOM_LIST && protocol != Settings._ANSWER_ROOM_MEMBER_NUMBER)
+					if (protocol != Settings._ANSWER_GAME_ROOM_LIST && protocol != Settings._ANSWER_ROOM_MEMBER_NUMBER
+							&& protocol != Settings._ANSWER_PANGPANG_ENEMY_EVENT)
 						System.out.println("receive the Packet " + EncryptionManager.decrypt64bits(data));
 
 					switch (protocol) {
@@ -395,13 +397,19 @@ public class ServerClient {
 					case Settings._ANSWER_PANGPANG_ENEMY_EVENT:
 						((GameRoomController) gameRoomController).pangpangEnemyPositionUpdate(splitPacket);
 						break;
-						
+
 					case Settings._ANSWER_PANGPANG_ENEMY_INIT:
 						((GameRoomController) gameRoomController).pangpangEnemyInit(splitPacket);
 						break;
-						
 
+					case Settings._ANSWER_PANGAPNG_ENEY_ATTACK:
+						((GameRoomController) gameRoomController).enemyMissileUpdate(splitPacket);
+						break;
 					// process unExist protocols
+						
+					case Settings._ANSWER_PANGAPNG_ATTACK:
+						((GameRoomController) gameRoomController).pangpangMissileUpdate(splitPacket);
+						break;
 					default:
 						System.err.println("[" + protocol + "] this protocol do not exist in the protocol list");
 						break;

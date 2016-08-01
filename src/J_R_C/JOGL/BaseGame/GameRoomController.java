@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -14,6 +15,7 @@ import GraphicUtility.AnimationManager;
 import GraphicUtility.AnimationSprite;
 import GraphicUtility.GraphicsContextSprite;
 import GraphicUtility.Sprite;
+import Object.Enemy_Missile;
 import Object.PangPangEnemy;
 import Object.PangPangPlayer;
 import Object.Player;
@@ -222,6 +224,10 @@ public class GameRoomController implements Initializable {
 
 	private ArrayList<PangPangEnemy> bubbles = new ArrayList<PangPangEnemy>();
 
+	private ArrayList<Enemy_Missile> bubbles_missiles = new ArrayList<Enemy_Missile>();
+
+	private ArrayList<Enemy_Missile> player_Missiles = new ArrayList<Enemy_Missile>();
+
 	private Player clientMainPlayer;
 
 	private PangPangPlayer clientPangPangMainPlayer;
@@ -246,7 +252,11 @@ public class GameRoomController implements Initializable {
 
 	private int nCommandsContainerIndicator;
 
+	private long nPangPangMissileNumber;
+
 	int _firstPoistion;
+
+	private boolean isInit = false;
 
 	private String sPangPangEnemyStack;
 	private boolean isPangPangEnemyStackRunning;
@@ -261,6 +271,7 @@ public class GameRoomController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		nPangPangMissileNumber = 0;
 		sNowMeteorGameWinner = null;
 		isMeteorGameFinishCheck = true;
 		isPangPangEnemyStackRunning = false;
@@ -326,13 +337,6 @@ public class GameRoomController implements Initializable {
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
-						/*
-						 * if (cheatingTextEdit.getText().length() > 29) {
-						 * Platform.runLater(() ->
-						 * handlePopup("25글자가 한계 입니다."));
-						 * cheatingTextEdit.setText(cheatingTextEdit.getText(0,
-						 * 29)); }
-						 */
 
 						if (client.getIsServerConnected() == ServerClient.SERVERCONNECTIONFAIL) {
 							terminate();
@@ -527,13 +531,14 @@ public class GameRoomController implements Initializable {
 
 		PangPangPlayer.getPlayerLeftImage().setAnimationChangeTime(0.2);
 
-		PangPangPlayer.setPlayerRihgtImage(
+		PangPangPlayer.setPlayerRightImage(
 				new AnimationManager("/Asset/pangpang_charecter.png", new AnimationSprite(150, 0, 28, 56),
 						new AnimationSprite(250, 0, 28, 56), new AnimationSprite(350, 0, 28, 56)));
 
 		PangPangPlayer.getPlayerRightImage().setAnimationChangeTime(0.2);
 
 		initPangPangBubbles();
+		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 10);
 
 		spriteAnimationTimer = new AnimationTimer() {
 
@@ -544,38 +549,93 @@ public class GameRoomController implements Initializable {
 				double elapsedTime = (currentNanoTime - lastNanoTime) / 1000000000.0;
 				lastNanoTime = currentNanoTime;
 
+				if (isInit == true) {
+					isInit = false;
+					pangpangReceiveEnemyInit();
+
+				}
 				// // game logic
 				if (isPangPangStartPrepareFinish && isGameStart()) {
 
-					if (input.contains("LEFT"))
-						clientPangPangMainPlayer.addVelocity(-3, 0);
-					if (input.contains("RIGHT"))
-						clientPangPangMainPlayer.addVelocity(3, 0);
+					boolean isClick = false;
+
+					if (input.contains("LEFT")) {
+						if (clientPangPangMainPlayer.getDirection() != GraphicsContextSprite.LEFT) {
+							clientPangPangMainPlayer.setDirection(GraphicsContextSprite.LEFT);
+							isClick = true;
+						}
+					}
+					if (input.contains("RIGHT")) {
+						if (clientPangPangMainPlayer.getDirection() != GraphicsContextSprite.RIGHT) {
+							clientPangPangMainPlayer.setDirection(GraphicsContextSprite.RIGHT);
+							client.sendPacket(Settings._REQUEST_PANGPANG_PLAYER_MOVING + "", getsRoomName(),
+									client.getClientName(), clientPangPangMainPlayer.getDirection() + "");
+
+							isClick = true;
+						}
+					}
 					if (input.contains("UP")) {
-						clientPangPangMainPlayer.setVelocity(0, 0);
-						client.sendPacket(Settings._REQUEST_PANGPANG_PLAYER_MOVING + "", getsRoomName(),
-								client.getClientName(), clientPangPangMainPlayer.getPositionX() + "",
-								clientPangPangMainPlayer.getPositionY() + "",
-								clientPangPangMainPlayer.getDirection() + "");
+						if (clientPangPangMainPlayer.getDirection() != GraphicsContextSprite.UP) {
+							clientPangPangMainPlayer.setDirection(GraphicsContextSprite.UP);
+							Runnable runnable = new Runnable() {
+								@Override
+								public void run() {
+									client.sendPacket(Settings._REQUEST_PANGAPNG_ATTACK + "", getsRoomName(),
+											client.getClientName(), client.getClientName() + nPangPangMissileNumber);
+								}
+							};
+							executorService.submit(runnable);
+							isClick = true;
+						}
+					}
+
+					if (isClick) {
+						Runnable runnable = new Runnable() {
+							@Override
+							public void run() {
+								client.sendPacket(Settings._REQUEST_PANGPANG_PLAYER_MOVING + "", getsRoomName(),
+										client.getClientName(), clientPangPangMainPlayer.getDirection() + "");
+							}
+						};
+						executorService.submit(runnable);
+
+						isClick = false;
 					}
 				} else if (clientPangPangMainPlayer != null)
 					clientPangPangMainPlayer.setVelocity(0, 0);
 
-				if (clientPangPangMainPlayer != null) {
-					clientPangPangMainPlayer.update(elapsedTime);
+				for (int i = 0; i < player_Missiles.size(); i++) {
+					player_Missiles.get(i).update(elapsedTime);
+					for (int j = 0; j < bubbles.size(); j++) {
+						if (bubbles.get(j).getPositionX() != 0 && bubbles.get(j).getPositionY() != 0
+								&& bubbles.get(j).intersects(player_Missiles.get(i)))
+							player_Missiles.remove(i);
+					}
+
+					if (player_Missiles.get(i).getPositionY() <= -10)
+						player_Missiles.remove(i);
+
+				}
+
+				for (int i = 0; i < bubbles_missiles.size(); i++) {
+					bubbles_missiles.get(i).update(elapsedTime);
+
+					if (bubbles_missiles.get(i).getPositionY() >= Settings.nGameAsteroidSceneHeight + 10)
+						bubbles_missiles.remove(i);
+
+					for (int j = 0; j < pangPangPlayers.size(); j++) {
+						if (pangPangPlayers.get(j).intersects(bubbles_missiles.get(i)))
+							bubbles_missiles.remove(i);
+					}
+
+				}
+
+				for (int i = 0; i < pangPangPlayers.size(); i++) {
+					pangPangPlayers.get(i).update(elapsedTime);
 					// update 하면서 자동으로 sprite image가 바뀌게 업데이트 할 것.
 
-					checkBound(clientPangPangMainPlayer);
+					checkBound(pangPangPlayers.get(i));
 
-					if (Math.abs(meteriorGamePlayerPositionX - clientPangPangMainPlayer.getPositionX()) > 0.6f
-							|| Math.abs(meteriorGamePlayerPositionY - clientPangPangMainPlayer.getPositionY()) > 0.5) {
-						client.sendPacket(Settings._REQUEST_PANGPANG_PLAYER_MOVING + "", getsRoomName(),
-								client.getClientName(), clientPangPangMainPlayer.getPositionX() + "",
-								clientPangPangMainPlayer.getPositionY() + "",
-								clientPangPangMainPlayer.getDirection() + "");
-						meteriorGamePlayerPositionX = clientPangPangMainPlayer.getPositionX();
-						meteriorGamePlayerPositionY = clientPangPangMainPlayer.getPositionY();
-					}
 				}
 
 				// render
@@ -584,11 +644,11 @@ public class GameRoomController implements Initializable {
 						Settings.nGameAsteroidSceneWidth, Settings.nGameAsteroidSceneHeight);
 
 				for (int i = 0; i < pangPangPlayers.size(); i++) {
-					if (pangPangPlayers.get(i).getDirection() == GraphicsContextSprite.LEFT) {
+					if (pangPangPlayers.get(i).getDirection() == GraphicsContextSprite.RIGHT) {
 						pangPangPlayers.get(i);
 						PangPangPlayer.getPlayerLeftImage().renderAnimation(elapsedTime, gc,
 								pangPangPlayers.get(i).getPositionX(), pangPangPlayers.get(i).getPositionY(), 17, 30);
-					} else if (pangPangPlayers.get(i).getDirection() == GraphicsContextSprite.RIGHT) {
+					} else if (pangPangPlayers.get(i).getDirection() == GraphicsContextSprite.LEFT) {
 						pangPangPlayers.get(i);
 						PangPangPlayer.getPlayerRightImage().renderAnimation(elapsedTime, gc,
 								pangPangPlayers.get(i).getPositionX(), pangPangPlayers.get(i).getPositionY(), 17, 30);
@@ -599,9 +659,16 @@ public class GameRoomController implements Initializable {
 				if (isPangPangStartPrepareFinish) {
 					pangPangEnemyPositionProcess();
 
-					for (int i = 0; i < bubbles.size(); i++)
+					for (int i = 0; i < bubbles.size(); i++) {
 						if (bubbles.get(i).getPositionX() != 0 && bubbles.get(i).getPositionY() != 0)
 							bubbles.get(i).render(gc);
+					}
+
+					for (int i = 0; i < bubbles_missiles.size(); i++)
+						bubbles_missiles.get(i).render(gc);
+
+					for (int i = 0; i < player_Missiles.size(); i++)
+						player_Missiles.get(i).render(gc);
 				}
 
 			}
@@ -1306,13 +1373,10 @@ public class GameRoomController implements Initializable {
 	}
 
 	public void updatePangPangPlayerPosition(String[] packet) {
-		if (client.getClientName().equals(packet[1]))
-			return;
 
 		for (int i = 0; i < pangPangPlayers.size(); i++)
 			if (pangPangPlayers.get(i).getsPlayerName().equals(packet[1])) {
-				pangPangPlayers.get(i).setPosition(Double.parseDouble(packet[2]), Double.parseDouble(packet[3]));
-				pangPangPlayers.get(i).setDirection(Integer.parseInt(packet[4]));
+				pangPangPlayers.get(i).setDirection(Integer.parseInt(packet[2]));
 			}
 	}
 
@@ -1641,9 +1705,34 @@ public class GameRoomController implements Initializable {
 		isPangPangEnemyStackRunning = false;
 	}
 
-	public void pangpangEnemyInit(String[] packet) {
+	public void pangpangMissileUpdate(String[] packet) {
 
-		String sPositionSet[] = packet[1].split(Settings.sPangPangPositionInformationWordToken);
+		for (int i = 0; i < pangPangPlayers.size(); i++)
+			if (pangPangPlayers.get(i).getsPlayerName().equals(packet[1])) {
+				Enemy_Missile missile = new Enemy_Missile("/Asset/box.png", 0, 0, 100, 100,
+						pangPangPlayers.get(i).getPositionX(), pangPangPlayers.get(i).getPositionY(), 0, packet[2]);
+				missile.setImageSize(Enemy_Missile.BUBLLE_MISSILE_WIDTH, Enemy_Missile.BUBLLE_MISSILE_HEIHGT);
+
+				player_Missiles.add(missile);
+				break;
+			}
+
+	}
+
+	public void enemyMissileUpdate(String[] packet) {
+
+		Enemy_Missile missile = new Enemy_Missile("/Asset/box.png", 100, 0, 100, 100, Double.parseDouble(packet[1]),
+				Double.parseDouble(packet[2]), Integer.parseInt(packet[3]), packet[4]);
+		missile.setImageSize(Enemy_Missile.BUBLLE_MISSILE_WIDTH, Enemy_Missile.BUBLLE_MISSILE_HEIHGT);
+
+		bubbles_missiles.add(missile);
+
+	}
+
+	String temp;
+
+	public void pangpangReceiveEnemyInit() {
+		String sPositionSet[] = temp.split(Settings.sPangPangPositionInformationWordToken);
 
 		for (int i = 1; i < sPositionSet.length; i++) {
 			String sSubPosition[] = sPositionSet[i].split(Settings.sPangPangPositionCoordinationToken);
@@ -1651,11 +1740,29 @@ public class GameRoomController implements Initializable {
 			for (int j = 0; j < bubbles.size(); j++)
 				if (bubbles.get(j).getsPlayerName().equals(sSubPosition[0])) {
 					bubbles.get(j).setImageTypeNumber(Integer.parseInt(sSubPosition[1]));
+					if (bubbles.get(j).getImageTypeNumber() == 0)
+						bubbles.get(j).reInitImage("/Asset/ball.png", 0, 0, 59, 58);
+					else if (bubbles.get(j).getImageTypeNumber() == 1)
+						bubbles.get(j).reInitImage("/Asset/ball.png", 60, 0, 59, 58);
+					else if (bubbles.get(j).getImageTypeNumber() == 2)
+						bubbles.get(j).reInitImage("/Asset/ball.png", 120, 0, 59, 58);
+					else if (bubbles.get(j).getImageTypeNumber() == 3)
+						bubbles.get(j).reInitImage("/Asset/ball.png", 180, 0, 59, 58);
+					else if (bubbles.get(j).getImageTypeNumber() == 4)
+						bubbles.get(j).reInitImage("/Asset/ball.png", 240, 0, 59, 58);
+					else
+						bubbles.get(j).reInitImage("/Asset/ball.png", 300, 0, 59, 58);
+					bubbles.get(j).setImageSize(20, 20);
 					bubbles.get(j).setDeath(Boolean.parseBoolean(sSubPosition[2]));
 					break;
 				}
 		}
+	}
 
+	public void pangpangEnemyInit(String[] packet) {
+
+		temp = packet[1];
+		isInit = true;
 	}
 
 	public void pangpangEnemyPositionUpdate(String[] packet) {

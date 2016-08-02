@@ -9,16 +9,10 @@ import java.net.Socket;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javafx.application.Platform;
-import javafx.fxml.Initializable;
-
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.codec.binary.Hex;
-
 import GraphicUtility.SplitPacketManager;
 import Utility.EncryptionManager;
+import javafx.application.Platform;
+import javafx.fxml.Initializable;
 
 /**
  * @author KJW finish at 2016/ 02/ 15
@@ -406,10 +400,15 @@ public class ServerClient {
 						((GameRoomController) gameRoomController).enemyMissileUpdate(splitPacket);
 						break;
 					// process unExist protocols
-						
+
 					case Settings._ANSWER_PANGAPNG_ATTACK:
 						((GameRoomController) gameRoomController).pangpangMissileUpdate(splitPacket);
 						break;
+
+					case Settings._ANSWER_PANGAPNG_ENEMY_COLLISION_EVENT:
+						((GameRoomController) gameRoomController).pangpangEnemyRemove(splitPacket);
+						break;
+
 					default:
 						System.err.println("[" + protocol + "] this protocol do not exist in the protocol list");
 						break;

@@ -481,6 +481,26 @@ public class Settings {
 	 */
 	public static final int _ANSWER_PANGAPNG_ATTACK = 0x0000005d;
 	
+	/**
+	 * Request METEORGAME STONE REINIT GAME PLAY 94
+	 */
+	public static final int _REQUEST_PANGAPNG_ENEMY_COLLISION_EVENT = 0x0000005e;
+	
+	/**
+	 * Request METEORGAME STONE REINIT GAME PLAY 95
+	 */
+	public static final int _ANSWER_PANGAPNG_ENEMY_COLLISION_EVENT = 0x0000005f;
+	
+	/**
+	 * Request METEORGAME STONE REINIT GAME PLAY 96
+	 */
+	public static final int _REQUEST_PANGAPNG_FINISH = 0x00000060;
+	
+	/**
+	 * Request METEORGAME STONE REINIT GAME PLAY 97
+	 */
+	public static final int _REQUEST_PANGAPNG_FINISH_WIN = 0x00000061;
+	
 	
 	// Asset Constant
 

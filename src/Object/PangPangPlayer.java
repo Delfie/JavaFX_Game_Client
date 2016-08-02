@@ -10,15 +10,21 @@ public class PangPangPlayer extends GraphicsContextSprite {
 	private static AnimationManager PlayerLeftImage;
 	private static AnimationManager PlayerRihgtImage;
 
+	private int nLife;
+	private boolean isDeath;
+
 	public PangPangPlayer(String filename, double width, double height) {
 		super(filename, width, height);
+		this.nLife = 2;
+		this.isDeath = false;
 	}
 
 	public PangPangPlayer(String filename, double startX, double startY, double width, double height) {
 		super(filename, startX, startY, width, height);
-		// TODO Auto-generated constructor stub
+		this.nLife = 2;
+		this.isDeath = false;
 	}
-	
+
 	public void update(double time) {
 
 		if (nDirection == LEFT)
@@ -54,6 +60,21 @@ public class PangPangPlayer extends GraphicsContextSprite {
 
 	public void setsPlayerName(String sPlayerName) {
 		this.sPlayerName = sPlayerName;
+	}
+
+	public int getnLife() {
+		return nLife;
+	}
+
+	public void decreaseLife() {
+		this.nLife--;
+
+		if (nLife < 0)
+			this.isDeath = true;
+	}
+
+	public boolean isDeath() {
+		return isDeath;
 	}
 
 }

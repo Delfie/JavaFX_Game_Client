@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,6 +17,7 @@ import GraphicUtility.AnimationSprite;
 import GraphicUtility.GraphicsContextSprite;
 import GraphicUtility.Sprite;
 import Object.Enemy_Missile;
+import Object.Explosion_Effect;
 import Object.PangPangEnemy;
 import Object.PangPangPlayer;
 import Object.Player;
@@ -224,6 +226,8 @@ public class GameRoomController implements Initializable {
 
 	private ArrayList<PangPangEnemy> bubbles = new ArrayList<PangPangEnemy>();
 
+	private ArrayList<Explosion_Effect> pangpang_bubbles_effects = new ArrayList<Explosion_Effect>();
+
 	private ArrayList<Enemy_Missile> bubbles_missiles = new ArrayList<Enemy_Missile>();
 
 	private ArrayList<Enemy_Missile> player_Missiles = new ArrayList<Enemy_Missile>();
@@ -262,6 +266,8 @@ public class GameRoomController implements Initializable {
 	private boolean isPangPangEnemyStackRunning;
 
 	private int nPangPangScore;
+
+	private long nInitRoomNumber;
 
 	// = new GraphicsContextSprite("box.png", 100, 100);
 
@@ -430,7 +436,7 @@ public class GameRoomController implements Initializable {
 			int _x = (int) x / Settings.nCatchMeImageWidth;
 			int _y = (int) y / Settings.nCatchMeImageHeight;
 
-			client.sendPacket(Settings._REQUEST_CATCHME_STONE_EVENT + "", getsRoomName(), _x + "", _y + "",
+			client.sendPacket(Settings._REQUEST_CATCHME_STONE_EVENT + "", getnInitRoomNumber() + "", _x + "", _y + "",
 					getnCatchmeItem() + "");
 
 			setPlayToken(false);
@@ -450,7 +456,8 @@ public class GameRoomController implements Initializable {
 			int _x = (int) x / Settings.nTicTacTocImageWidth;
 			int _y = (int) y / Settings.nTicTacTocImageHeight;
 
-			client.sendPacket(Settings._REQUEST_TICTACTOC_STONE_EVENT + "", getsRoomName(), _x + "", _y + "");
+			client.sendPacket(Settings._REQUEST_TICTACTOC_STONE_EVENT + "", getnInitRoomNumber() + "", _x + "",
+					_y + "");
 
 			setPlayToken(false);
 			event.consume();
@@ -518,7 +525,8 @@ public class GameRoomController implements Initializable {
 	}
 
 	private void drawSpriteImageViewPangPang() {
-		client.sendPacket(Settings._REQUEST_PANGPANG_INIT_GAME_PLAY + "", getsRoomName(), client.getClientName());
+		client.sendPacket(Settings._REQUEST_PANGPANG_INIT_GAME_PLAY + "", getnInitRoomNumber() + "",
+				client.getClientName());
 
 		Canvas canvas = new Canvas(360, 280);
 
@@ -582,7 +590,7 @@ public class GameRoomController implements Initializable {
 					if (input.contains("RIGHT")) {
 						if (clientPangPangMainPlayer.getDirection() != GraphicsContextSprite.RIGHT) {
 							clientPangPangMainPlayer.setDirection(GraphicsContextSprite.RIGHT);
-							client.sendPacket(Settings._REQUEST_PANGPANG_PLAYER_MOVING + "", getsRoomName(),
+							client.sendPacket(Settings._REQUEST_PANGPANG_PLAYER_MOVING + "", getnInitRoomNumber() + "",
 									client.getClientName(), clientPangPangMainPlayer.getDirection() + "");
 
 							isClick = true;
@@ -594,7 +602,7 @@ public class GameRoomController implements Initializable {
 							Runnable runnable = new Runnable() {
 								@Override
 								public void run() {
-									client.sendPacket(Settings._REQUEST_PANGAPNG_ATTACK + "", getsRoomName(),
+									client.sendPacket(Settings._REQUEST_PANGAPNG_ATTACK + "", getnInitRoomNumber() + "",
 											client.getClientName(), client.getClientName() + nPangPangMissileNumber);
 								}
 							};
@@ -607,8 +615,9 @@ public class GameRoomController implements Initializable {
 						Runnable runnable = new Runnable() {
 							@Override
 							public void run() {
-								client.sendPacket(Settings._REQUEST_PANGPANG_PLAYER_MOVING + "", getsRoomName(),
-										client.getClientName(), clientPangPangMainPlayer.getDirection() + "");
+								client.sendPacket(Settings._REQUEST_PANGPANG_PLAYER_MOVING + "",
+										getnInitRoomNumber() + "", client.getClientName(),
+										clientPangPangMainPlayer.getDirection() + "");
 							}
 						};
 						executorService.submit(runnable);
@@ -619,7 +628,9 @@ public class GameRoomController implements Initializable {
 					clientPangPangMainPlayer.setVelocity(0, 0);
 
 				// colission detection
-				for (int i = 0; i < player_Missiles.size(); i++) {
+				for (
+
+						int i = 0; i < player_Missiles.size(); i++) {
 					player_Missiles.get(i).update(elapsedTime);
 
 					if (player_Missiles.get(i).getPositionY() <= -10) {
@@ -632,8 +643,8 @@ public class GameRoomController implements Initializable {
 								&& bubbles.get(j).intersects(player_Missiles.get(i))) {
 							player_Missiles.remove(i);
 
-							client.sendPacket(Settings._REQUEST_PANGAPNG_ENEMY_COLLISION_EVENT + "", getsRoomName(),
-									bubbles.get(j).getsPlayerName());
+							client.sendPacket(Settings._REQUEST_PANGAPNG_ENEMY_COLLISION_EVENT + "",
+									getnInitRoomNumber() + "", bubbles.get(j).getsPlayerName());
 
 						}
 					}
@@ -653,6 +664,7 @@ public class GameRoomController implements Initializable {
 
 								displayText("[" + pangPangPlayers.get(j).getsPlayerName() + "] is death");
 								pangPangPlayers.remove(j);
+
 							}
 						}
 					}
@@ -660,6 +672,15 @@ public class GameRoomController implements Initializable {
 					if (bubbles_missiles.get(i).getPositionY() >= Settings.nGameAsteroidSceneHeight + 10)
 						bubbles_missiles.remove(i);
 
+				}
+
+				for (int i = 0; i < pangpang_bubbles_effects.size(); i++) {
+					pangpang_bubbles_effects.get(i).update(elapsedTime);
+
+					if (pangpang_bubbles_effects.get(i).isTermination()) {
+						pangpang_bubbles_effects.remove(i);
+						continue;
+					}
 				}
 
 				for (int i = 0; i < pangPangPlayers.size(); i++) {
@@ -674,13 +695,14 @@ public class GameRoomController implements Initializable {
 
 				if (pangPangPlayers.size() <= 0) {
 					displayText("Game OVER!!");
-					client.sendPacket(Settings._REQUEST_PANGAPNG_FINISH + "", getsRoomName(), client.getClientName());
+					client.sendPacket(Settings._REQUEST_PANGAPNG_FINISH + "", getnInitRoomNumber() + "",
+							client.getClientName());
 					isGameRunning = false;
 				}
 
-				if (bubbles.size() <= 0) {
+				if (bubbles.size() == 8) {
 					displayText("Game Win!!");
-					client.sendPacket(Settings._REQUEST_PANGAPNG_FINISH_WIN + "", getsRoomName(),
+					client.sendPacket(Settings._REQUEST_PANGAPNG_FINISH_WIN + "", getnInitRoomNumber() + "",
 							client.getClientName(), nPangPangScore + "");
 					isGameRunning = false;
 				}
@@ -708,7 +730,7 @@ public class GameRoomController implements Initializable {
 					pangPangEnemyPositionProcess();
 
 					for (int i = 0; i < bubbles.size(); i++) {
-						if (bubbles.get(i).getPositionX() != 0 && bubbles.get(i).getPositionY() != 0)
+						if (bubbles.get(i).getPositionX() != 0 || bubbles.get(i).getPositionY() != 0)
 							bubbles.get(i).render(gc);
 					}
 
@@ -717,6 +739,9 @@ public class GameRoomController implements Initializable {
 
 					for (int i = 0; i < player_Missiles.size(); i++)
 						player_Missiles.get(i).render(gc);
+
+					for (int i = 0; i < pangpang_bubbles_effects.size(); i++)
+						pangpang_bubbles_effects.get(i).render(gc);
 
 					for (int i = 0; i < clientPangPangMainPlayer.getnLife(); i++)
 						lifeImage.render(gc, 10 + i * 20, 10, 20, 20);
@@ -730,7 +755,8 @@ public class GameRoomController implements Initializable {
 	}
 
 	private void drawSpriteImageViewMeteor() {
-		client.sendPacket(Settings._REQUEST_METEORGAME_INIT_GAME_PLAY + "", getsRoomName(), client.getClientName());
+		client.sendPacket(Settings._REQUEST_METEORGAME_INIT_GAME_PLAY + "", getnInitRoomNumber() + "",
+				client.getClientName());
 
 		// Mapping 사영 시키는 함수 만들것.
 		Canvas canvas = new Canvas(360, 280);
@@ -741,13 +767,13 @@ public class GameRoomController implements Initializable {
 
 		anchorPane.getScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
-				client.sendPacket(Settings._REQUEST_METEORGAME_SET_CLIECK_EVENT + "", getsRoomName(),
+				client.sendPacket(Settings._REQUEST_METEORGAME_SET_CLIECK_EVENT + "", getnInitRoomNumber() + "",
 						e.getX() - 100 + "", e.getY() - 14 + "");
 
 			}
 		});
 
-		GraphicsContextSprite background = new GraphicsContextSprite("/Asset/background.png", 10, 0, 310, 470);
+		GraphicsContextSprite background = new GraphicsContextSprite("/Asset/space.jpg", 0, 0, 640, 480);
 
 		spriteAnimationTimer = new AnimationTimer() {
 
@@ -779,7 +805,7 @@ public class GameRoomController implements Initializable {
 
 					if (Math.abs(meteriorGamePlayerPositionX - clientMainPlayer.getPositionX()) > 1.2f
 							|| Math.abs(meteriorGamePlayerPositionY - clientMainPlayer.getPositionY()) > 0.5) {
-						client.sendPacket(Settings._REQUEST_METEORGAME_PLAYER_MOVING + "", getsRoomName(),
+						client.sendPacket(Settings._REQUEST_METEORGAME_PLAYER_MOVING + "", getnInitRoomNumber() + "",
 								client.getClientName(), clientMainPlayer.getPositionX() + "",
 								clientMainPlayer.getPositionY() + "");
 						meteriorGamePlayerPositionX = clientMainPlayer.getPositionX();
@@ -804,13 +830,13 @@ public class GameRoomController implements Initializable {
 					for (int j = 0; j < players.size(); j++) {
 						if (players.get(j).intersects(asteroids.get(i)) && isMeteorGameStartPrepareFinish) {
 
-							client.sendPacket(Settings._REQUEST_METEORGAME_METEOR_DELETE + "", getsRoomName(),
-									players.get(j).getsPlayerName(), asteroids.get(i).getPositionX() + "",
-									asteroids.get(i).getPositionY() + "");
+							client.sendPacket(Settings._REQUEST_METEORGAME_METEOR_DELETE + "",
+									getnInitRoomNumber() + "", players.get(j).getsPlayerName(),
+									asteroids.get(i).getPositionX() + "", asteroids.get(i).getPositionY() + "");
 
-							client.sendPacket(Settings._REQUEST_METEORGAME_METEOR_PLAYER_SIZE_UP + "", getsRoomName(),
-									players.get(j).getsPlayerName(), players.get(j).getImageSizeX() + "",
-									players.get(j).getImageSizeY() + "");
+							client.sendPacket(Settings._REQUEST_METEORGAME_METEOR_PLAYER_SIZE_UP + "",
+									getnInitRoomNumber() + "", players.get(j).getsPlayerName(),
+									players.get(j).getImageSizeX() + "", players.get(j).getImageSizeY() + "");
 							break;
 						}
 
@@ -818,7 +844,7 @@ public class GameRoomController implements Initializable {
 				}
 
 				if (asteroids.size() <= 0 && isMeteorGameFinishCheck && isMeteorGameStartPrepareFinish) {
-					client.sendPacket(Settings._REQUEST_METEORGAME_METEOR_GAME_FINISH + "", getsRoomName(),
+					client.sendPacket(Settings._REQUEST_METEORGAME_METEOR_GAME_FINISH + "", getnInitRoomNumber() + "",
 							sNowMeteorGameWinner);
 					isMeteorGameFinishCheck = false;
 				}
@@ -965,7 +991,7 @@ public class GameRoomController implements Initializable {
 		if (packet.length() > 0) {
 			cheatingTextEdit.clear();
 
-			client.sendPacket(Settings._REQUEST_ROOM_MEMEBER_MESSAGE + "", packet, getsRoomName());
+			client.sendPacket(Settings._REQUEST_ROOM_MEMEBER_MESSAGE + "", packet, getnInitRoomNumber() + "");
 		}
 	}
 
@@ -996,11 +1022,11 @@ public class GameRoomController implements Initializable {
 	 */
 	public void handlebtnStartStop(ActionEvent event) {
 		if (btnStartCancel.getText().equals("시작")) {
-			client.sendPacket(Settings._REQUEST_START_THE_GAME + "", client.getClientName(), getsRoomName(),
+			client.sendPacket(Settings._REQUEST_START_THE_GAME + "", client.getClientName(), getnInitRoomNumber() + "",
 					Settings.isGamePrepareStart + "");
 
 		} else if (btnStartCancel.getText().equals("취소")) {
-			client.sendPacket(Settings._REQUEST_START_THE_GAME + "", client.getClientName(), getsRoomName(),
+			client.sendPacket(Settings._REQUEST_START_THE_GAME + "", client.getClientName(), getnInitRoomNumber() + "",
 					Settings.isGamePrepareStop + "");
 		}
 	}
@@ -1031,11 +1057,13 @@ public class GameRoomController implements Initializable {
 	public void outOfTheRoom() {
 		if (getnGameType() == Settings.nGameMeteorGame) {
 			spriteAnimationTimer.stop();
-			client.sendPacket(Settings._REQUEST_METEORGAME_OUT_OF_PLAYER + "", getsRoomName(), client.getClientName());
+			client.sendPacket(Settings._REQUEST_METEORGAME_OUT_OF_PLAYER + "", getnInitRoomNumber() + "",
+					client.getClientName());
 
 		} else if (getnGameType() == Settings.nGamePangPang) {
 			spriteAnimationTimer.stop();
-			client.sendPacket(Settings._REQUEST_PANGPANG_OUT_OF_PLAYER + "", getsRoomName(), client.getClientName());
+			client.sendPacket(Settings._REQUEST_PANGPANG_OUT_OF_PLAYER + "", getnInitRoomNumber() + "",
+					client.getClientName());
 
 		}
 		Stage stage = (Stage) btnCancel.getScene().getWindow();
@@ -1073,7 +1101,7 @@ public class GameRoomController implements Initializable {
 				btnStartCancel.setText("시작");
 			});
 
-		client.sendPacket(Settings._REQUEST_ANWER_ROOM_GAME_MESSAGE + "", getsRoomName(), packet[1]);
+		client.sendPacket(Settings._REQUEST_ANWER_ROOM_GAME_MESSAGE + "", getnInitRoomNumber() + "", packet[1]);
 	}
 
 	/**
@@ -1118,7 +1146,7 @@ public class GameRoomController implements Initializable {
 
 			if (Integer.parseInt(packet[2]) == client.getClientUniqueGameTagNumber()) {
 				setPlayToken(true);
-				client.sendPacket(Settings._REQUES_TTICTACTOC_TURN_PLAYER_NAME + "", getsRoomName(),
+				client.sendPacket(Settings._REQUES_TTICTACTOC_TURN_PLAYER_NAME + "", getnInitRoomNumber() + "",
 						client.getClientName());
 			} else
 				setPlayToken(false);
@@ -1270,8 +1298,8 @@ public class GameRoomController implements Initializable {
 
 		for (int i = 0; i < pangPangPlayers.size(); i++) {
 			if (pangPangPlayers.get(i).getsPlayerName().equals(client.getClientName())) {
-				client.sendPacket(Settings._REQUEST_PANGPANG_REINIT_GAME_PLAY + "", getsRoomName(), packet[1],
-						client.getClientName(), pangPangPlayers.get(i).getPositionX() + "",
+				client.sendPacket(Settings._REQUEST_PANGPANG_REINIT_GAME_PLAY + "", getnInitRoomNumber() + "",
+						packet[1], client.getClientName(), pangPangPlayers.get(i).getPositionX() + "",
 						pangPangPlayers.get(i).getPositionY() + "");
 				clientPangPangMainPlayer = pangPangPlayers.get(i);
 			}
@@ -1293,8 +1321,9 @@ public class GameRoomController implements Initializable {
 
 		for (int i = 0; i < players.size(); i++) {
 			if (players.get(i).getsPlayerName().equals(client.getClientName())) {
-				client.sendPacket(Settings._REQUEST_METEORGAME_REINIT_GAME_PLAY + "", getsRoomName(), packet[1],
-						client.getClientName(), players.get(i).getPositionX() + "", players.get(i).getPositionY() + "");
+				client.sendPacket(Settings._REQUEST_METEORGAME_REINIT_GAME_PLAY + "", getnInitRoomNumber() + "",
+						packet[1], client.getClientName(), players.get(i).getPositionX() + "",
+						players.get(i).getPositionY() + "");
 				clientMainPlayer = players.get(i);
 			}
 
@@ -1545,7 +1574,7 @@ public class GameRoomController implements Initializable {
 
 				});
 
-				client.sendPacket(Settings._REQUES_TTICTACTOC_TURN_PLAYER_NAME + "", getsRoomName(),
+				client.sendPacket(Settings._REQUES_TTICTACTOC_TURN_PLAYER_NAME + "", getnInitRoomNumber() + "",
 						client.getClientName());
 
 				if (Integer.parseInt(packet[8]) != Settings.ERRORCODE) {
@@ -1655,7 +1684,7 @@ public class GameRoomController implements Initializable {
 
 				});
 
-				client.sendPacket(Settings._REQUES_TTICTACTOC_TURN_PLAYER_NAME + "", getsRoomName(),
+				client.sendPacket(Settings._REQUES_TTICTACTOC_TURN_PLAYER_NAME + "", getnInitRoomNumber() + "",
 						client.getClientName());
 
 				if (Integer.parseInt(packet[5]) == client.getClientUniqueGameTagNumber())
@@ -1758,8 +1787,21 @@ public class GameRoomController implements Initializable {
 
 	public void pangpangEnemyRemove(String[] packet) {
 		for (int i = 0; i < bubbles.size(); i++) {
-			if (bubbles.get(i).getsPlayerName().equals(packet[1]))
+			if (bubbles.get(i).getsPlayerName().equals(packet[1])) {
+				Random rnd = new Random();
+
+				for (int j = 0; j < rnd.nextInt(8); j++) {
+
+					Explosion_Effect temp = new Explosion_Effect("/Asset/ball.png", 60 * rnd.nextInt(5), 0, 59, 58,
+							rnd.nextInt(16));
+					temp.setImageSize(10, 10);
+					temp.setPosition(bubbles.get(i).getPositionX(), bubbles.get(i).getPositionY());
+
+					pangpang_bubbles_effects.add(temp);
+				}
 				bubbles.remove(i);
+
+			}
 		}
 	}
 
@@ -1895,7 +1937,7 @@ public class GameRoomController implements Initializable {
 		this.sRoomName = sRoomName;
 		lbRoomName.setText(getsRoomName());
 		displayText("[" + getsRoomName() + "]" + "에 입장하셨습니다.");
-		client.sendPacket(Settings._REQUEST_NEW_ROOM_MEMEBER_NOTIFICATION + "", getsRoomName());
+		client.sendPacket(Settings._REQUEST_NEW_ROOM_MEMEBER_NOTIFICATION + "", getnInitRoomNumber() + "");
 	}
 
 	/**
@@ -1959,7 +2001,7 @@ public class GameRoomController implements Initializable {
 			drawSpriteImageViewPangPang();
 		}
 
-		client.sendPacket(Settings._REQUEST_GAME_ROOM_MEMEBER_NUMBER + "", sRoomName);
+		client.sendPacket(Settings._REQUEST_GAME_ROOM_MEMEBER_NUMBER + "", getsRoomName() + "");
 	}
 
 	/**
@@ -2048,6 +2090,14 @@ public class GameRoomController implements Initializable {
 	 */
 	public void setnCatchmeItem(int nCatchmeItem) {
 		this.nCatchmeItem = nCatchmeItem;
+	}
+
+	public long getnInitRoomNumber() {
+		return nInitRoomNumber;
+	}
+
+	public void setnInitRoomNumber(long nInitRoomNumber) {
+		this.nInitRoomNumber = nInitRoomNumber;
 	}
 
 }

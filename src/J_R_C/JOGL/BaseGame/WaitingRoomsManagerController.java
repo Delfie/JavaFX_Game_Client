@@ -171,7 +171,7 @@ public class WaitingRoomsManagerController implements Initializable {
 
 	private int nCommandsContainerIndicator;
 
-	int _firstPoistion;
+	private int _firstPoistion;
 
 	/*
 	 * (non-Javadoc) init the all state about waiting room
@@ -558,6 +558,7 @@ public class WaitingRoomsManagerController implements Initializable {
 				GameRoomController gameRoomController = loader.getController();
 				gameRoomController.setPrimaryStage(primaryStage);
 				gameRoomController.setsRoomName(packet[1]);
+				gameRoomController.setnInitRoomNumber(Long.parseLong(packet[5]));
 				gameRoomController.setnToTalClient(Integer.parseInt(packet[2]));
 				gameRoomController.setnGameType(Integer.parseInt(packet[3]));
 				gameRoomController.initTurnPlayerName(packet[4]);

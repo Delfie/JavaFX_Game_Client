@@ -6,12 +6,6 @@ import GraphicUtility.GraphicsContextSprite;
 
 public class Enemy_Missile extends GraphicsContextSprite {
 
-	private float direction_dis_X[] = { 0f, 0.39f, 0.75f, 0.93f, 1f, 0.93f, 0.75f, 0.39f, 0f, -0.39f, -0.75f, -0.93f,
-			-1f, -0.93f, -0.75f, -0.39f };
-
-	private float dircetion_dis_Y[] = { -1f, -0.93f, -0.75f, -0.39f, -0f, +0.39f, +0.75f, +0.93f, +1f, +0.93f, +0.75f,
-			+0.39f, 0f, -0.39f, -0.75f, -0.93f };
-
 	public static final int BUBLLE_MISSILE_WIDTH = 5;
 	public static final int BUBLLE_MISSILE_HEIHGT = 5;
 
@@ -31,7 +25,7 @@ public class Enemy_Missile extends GraphicsContextSprite {
 		this.directions = dir;
 		this.image_Number = rnd.nextInt(3) + 45;
 		setPosition(x, y);
-		setVelocity(direction_dis_X[dir] * 60, dircetion_dis_Y[dir] * 60);
+		setVelocity(direction_dis_X[dir] * 90, dircetion_dis_Y[dir] * 90);
 
 	}
 

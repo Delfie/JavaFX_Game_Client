@@ -28,9 +28,9 @@ public class PangPangPlayer extends GraphicsContextSprite {
 	public void update(double time) {
 
 		if (nDirection == LEFT)
-			velocityX = -10;
+			velocityX = -40;
 		else if (nDirection == RIGHT)
-			velocityX = 10;
+			velocityX = 40;
 		else if (nDirection == UP)
 			velocityX = 0;
 

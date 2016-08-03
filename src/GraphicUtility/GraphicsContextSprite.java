@@ -37,6 +37,12 @@ public class GraphicsContextSprite {
 	public static final int RIGHT = 0;
 
 	public static final int UP = 2;
+	
+	protected float direction_dis_X[] = { 0f, 0.39f, 0.75f, 0.93f, 1f, 0.93f, 0.75f, 0.39f, 0f, -0.39f, -0.75f, -0.93f,
+			-1f, -0.93f, -0.75f, -0.39f };
+
+	protected float dircetion_dis_Y[] = { -1f, -0.93f, -0.75f, -0.39f, -0f, +0.39f, +0.75f, +0.93f, +1f, +0.93f, +0.75f,
+			+0.39f, 0f, -0.39f, -0.75f, -0.93f };
 
 	public GraphicsContextSprite() {
 		imageStartX = 0;

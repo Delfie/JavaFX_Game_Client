@@ -40,4 +40,18 @@ public class PangPangEnemy extends GraphicsContextSprite {
 		this.imageTypeNumber = imageTypeNumber;
 	}
 
+	public void update(double time) {
+
+		if (velocityX > 0)
+			nDirection = LEFT;
+		else if (velocityX < 0)
+			nDirection = RIGHT;
+		else if (velocityX == 0)
+			nDirection = UP;
+
+		positionX += velocityX * time;
+		positionY += velocityY * time;
+		
+	}
+	
 }

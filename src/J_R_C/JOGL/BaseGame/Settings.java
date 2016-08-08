@@ -715,5 +715,13 @@ public class Settings {
     public static final int nPangPangEnemyWidth = 8;
     
     public static final int nPangPangEnemyHeight = 6;
+    
+    public static final int nEffectPoolSize = 20;
+    
+    public static final String saCrashEffect = "shut";
+    
+    public static final String saPangPangBGM = "/Asset/music.mp3";
+    
+    public static final String saPangPangCrashBGM = "/Asset/crash.wav";
 
 }

@@ -21,6 +21,8 @@ import Object.Explosion_Effect;
 import Object.PangPangEnemy;
 import Object.PangPangPlayer;
 import Object.Player;
+import Utility.Sound_Audio;
+import Utility.Sound_Music;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -52,6 +54,10 @@ import javafx.stage.Stage;
  * @copyRight of KJW all Rights Reserved and follow the MIT license
  */
 public class GameRoomController implements Initializable {
+
+	private Sound_Music soundPangPangBackground;
+
+	private Sound_Audio effectSoundManager;
 
 	private final int SENDINGMESSAGEMAXLENGTH = 70;
 
@@ -279,6 +285,7 @@ public class GameRoomController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		soundPangPangBackground = new Sound_Music(Settings.saPangPangBGM);
 		nPangPangMissileNumber = 0;
 		sNowMeteorGameWinner = null;
 		isMeteorGameFinishCheck = true;
@@ -293,6 +300,10 @@ public class GameRoomController implements Initializable {
 		lbCatchmePlayCount.setVisible(false);
 		lbPlayerTurn.setVisible(false);
 		sCommandsContainer = new String[Settings.nMaximumSizeOfCommandsContainer];
+
+		effectSoundManager = new Sound_Audio(Settings.nEffectPoolSize);
+
+		effectSoundManager.loadSoundEffects(Settings.saCrashEffect, Settings.saPangPangCrashBGM);
 
 		// game play board size
 		anchorPane.setMaxSize(GameViewMaximumWidth, GameViewMaximumHeight);
@@ -373,7 +384,11 @@ public class GameRoomController implements Initializable {
 	public void terminate() {
 		if (getnGameType() == Settings.nGameMeteorGame)
 			spriteAnimationTimer.stop();
-
+		else if (getnGameType() == Settings.nGamePangPang) {
+			spriteAnimationTimer.stop();
+			soundPangPangBackground.stopMusic();
+			effectSoundManager.shutdown();
+		}
 		Stage stage = (Stage) primaryStage.getScene().getWindow();
 
 		try {
@@ -628,9 +643,7 @@ public class GameRoomController implements Initializable {
 					clientPangPangMainPlayer.setVelocity(0, 0);
 
 				// colission detection
-				for (
-
-						int i = 0; i < player_Missiles.size(); i++) {
+				for (int i = 0; i < player_Missiles.size(); i++) {
 					player_Missiles.get(i).update(elapsedTime);
 
 					if (player_Missiles.get(i).getPositionY() <= -10) {
@@ -642,7 +655,7 @@ public class GameRoomController implements Initializable {
 						if (bubbles.get(j).getPositionX() != 0 && bubbles.get(j).getPositionY() != 0
 								&& bubbles.get(j).intersects(player_Missiles.get(i))) {
 							player_Missiles.remove(i);
-
+							effectSoundManager.playSound(Settings.saCrashEffect);
 							client.sendPacket(Settings._REQUEST_PANGAPNG_ENEMY_COLLISION_EVENT + "",
 									getnInitRoomNumber() + "", bubbles.get(j).getsPlayerName());
 
@@ -702,6 +715,7 @@ public class GameRoomController implements Initializable {
 
 				if (bubbles.size() == 8) {
 					displayText("Game Win!!");
+					soundPangPangBackground.stopMusic();
 					client.sendPacket(Settings._REQUEST_PANGAPNG_FINISH_WIN + "", getnInitRoomNumber() + "",
 							client.getClientName(), nPangPangScore + "");
 					isGameRunning = false;
@@ -1062,6 +1076,7 @@ public class GameRoomController implements Initializable {
 
 		} else if (getnGameType() == Settings.nGamePangPang) {
 			spriteAnimationTimer.stop();
+			soundPangPangBackground.stopMusic();
 			client.sendPacket(Settings._REQUEST_PANGPANG_OUT_OF_PLAYER + "", getnInitRoomNumber() + "",
 					client.getClientName());
 
@@ -1422,6 +1437,7 @@ public class GameRoomController implements Initializable {
 
 	public void StartPrepareCompletePangPang(String[] packet) {
 		isPangPangStartPrepareFinish = Boolean.parseBoolean(packet[1]);
+		soundPangPangBackground.repeatStartMusic();
 		Platform.runLater(() -> displayText("Game Start!!"));
 	}
 

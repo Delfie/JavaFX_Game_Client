@@ -396,7 +396,7 @@ public class ServerClient {
 						((GameRoomController) gameRoomController).pangpangEnemyInit(splitPacket);
 						break;
 
-					case Settings._ANSWER_PANGAPNG_ENEY_ATTACK:
+					case Settings._ANSWER_PANGAPNG_ENEMY_ATTACK:
 						((GameRoomController) gameRoomController).enemyMissileUpdate(splitPacket);
 						break;
 					// process unExist protocols

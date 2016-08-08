@@ -49,7 +49,9 @@ public class WaitingRoomsManagerController implements Initializable {
 	private final int ROOMNAMEMAXIMUMLENGTH = 5;
 
 	private final int ROOMMAMBERMAXIMUMLENGTH = 1;
-
+	/**
+	 * sending masseage maximum size
+	 */
 	private final int SENDINGMESSAGEMAXLENGTH = 70;
 
 	// Label
@@ -371,6 +373,9 @@ public class WaitingRoomsManagerController implements Initializable {
 		}
 	}
 
+	/**
+	 * set the previous saving text
+	 */
 	private void setServerCommandTextEdit() {
 		Platform.runLater(() -> cheatingTextEdit.setText(sCommandsContainer[nCommandIndicatorPoisition]));
 		Platform.runLater(() -> cheatingTextEdit.positionCaret(cheatingTextEdit.getLength()));

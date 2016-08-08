@@ -195,7 +195,7 @@ public class Settings {
 	/**
 	 * Request TicTacToc player Name 36
 	 */
-	public static final int _REQUES_TTICTACTOC_TURN_PLAYER_NAME = 0x00000024;
+	public static final int _REQUEST_TICTACTOC_TURN_PLAYER_NAME = 0x00000024;
 
 	/**
 	 * Answer TicTacToc player Name 37
@@ -303,201 +303,201 @@ public class Settings {
 	public static final int _ANSWER_MOBILE_MAKE_GAME_UNIVERSE = 0x00000039;
 
 	/**
-	 * Request Client METEORGAME STONE SET CLICK EVENT 58
+	 * Request METEORGAME STONE SET CLICK EVENT 58
 	 */
 	public static final int _REQUEST_METEORGAME_SET_CLIECK_EVENT = 0x0000003a;
 
 	/**
-	 * Answer Client METEORGAME STONE SET CLICK EVENT 59
+	 * Answer METEORGAME STONE SET CLICK EVENT 59
 	 */
 	public static final int _ANSWER_METEORGAME_SET_CLIECK_EVENT = 0x0000003b;
 
 	/**
-	 * Request Client METEORGAME STONE INIT GAME PLAY 60
+	 * Request METEORGAME init Game Play 60
 	 */
 	public static final int _REQUEST_METEORGAME_INIT_GAME_PLAY = 0x0000003c;
 
 	/**
-	 * Answer Client METEORGAME STONE INIT GAME PLAY 61
+	 * Answer METEORGAME init Game play 61
 	 */
 	public static final int _ANSWER_METEORGAME_INIT_GAME_PLAY = 0x0000003d;
 
 	/**
-	 * Request Client METEORGAME STONE REINIT GAME PLAY 62
+	 * Request METEORGAME reinit Game play 62
 	 */
 	public static final int _REQUEST_METEORGAME_REINIT_GAME_PLAY = 0x0000003e;
 
 	/**
-	 * Answer Client METEORGAME STONE REINIT GAME PLAY 63
+	 * Answer METEORGAME reinit Game PLAY 63
 	 */
 	public static final int _ANSWER_METEORGAME_REINIT_GAME_PLAY = 0x0000003f;
 
 	/**
-	 * Answer Client METEORGAME STONE REINIT GAME PLAY 64
+	 * Request METEORGAME out event 64
 	 */
 	public static final int _REQUEST_METEORGAME_OUT_OF_PLAYER = 0x00000040;
 
 	/**
-	 * Answer Client METEORGAME STONE REINIT GAME PLAY 65
+	 * Answer MEETEORGAME out event 65
 	 */
 	public static final int _ANSWER_METEORGAME_OUT_OF_PLAYER = 0x00000041;
 
 	/**
-	 * Answer Client METEORGAME STONE REINIT GAME PLAY 66
+	 * Answer METEORGAME Universe Stone event 66
 	 */
 	public static final int _ANSWER_METEORGAME_UNIVERSE_INIT = 0x00000042;
 
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 67
+	 * Request METEORGAME player movement event 67
 	 */
 	public static final int _REQUEST_METEORGAME_PLAYER_MOVING = 0x00000043;
 
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 68
+	 * Answer METEORGAME player movement event 68
 	 */
 	public static final int _ANSWER_METEORGAME_PLAYER_MOVING = 0x00000044;
 
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 69
+	 * Answer METEORGAME player game start 69
 	 */
 	public static final int _ANSWER_METEORGAME_PLAY_START = 0x00000045;
 
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 70
+	 * Request METEORGAME meteor crash event 70
 	 */
 	public static final int _REQUEST_METEORGAME_METEOR_DELETE = 0x00000046;
 
 	/**
-	 * Answer METEORGAME STONE REINIT GAME PLAY 71
+	 * Answer METEORGAME meteor crash event 71
 	 */
 	public static final int _ANSWER_METEORGAME_METEOR_DELETE = 0x00000047;
 
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 72
+	 * Request METEORGAME Game finish 72
 	 */
 	public static final int _REQUEST_METEORGAME_METEOR_GAME_FINISH = 0x00000048;
 
 	/**
-	 * Answer METEORGAME STONE REINIT GAME PLAY 73
+	 * Answer METEORGAME Game finish 73
 	 */
 	public static final int _ANSWER_METEORGAME_METEOR_GAME_FINISH = 0x00000049;
 
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 74
+	 * Request Mobile PangPang Score 74
 	 */
 	public static final int _REQEUST_MOBILE_PANGPANG_SCORE = 0x0000004a;
 
 	/**
-	 * Answer METEORGAME STONE REINIT GAME PLAY 75
+	 * Answer Mobile PangPang Score from DB 75
 	 */
 	public static final int _ANSWER_MOBILE_PANGPANG_SCORE = 0x0000004b;
 
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 76
+	 * Request PC-Client Version check event 76
 	 */
 	public static final int _REQUEST_PC_CLIENT_VERSION_CHECK = 0x0000004c;
 
 	/**
-	 * Answer METEORGAME STONE REINIT GAME PLAY 77
+	 * Answer PC-Client Version check event 77
 	 */
 	public static final int _ANSWER_PC_CLIENT_VERSION_CHECK = 0x0000004d;
 	
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 78
+	 * Request PANGPANG Game init event 78
 	 */
 	public static final int _REQUEST_PANGPANG_INIT_GAME_PLAY = 0x0000004e;
 
 	/**
-	 * Answer METEORGAME STONE REINIT GAME PLAY 79
+	 * Answer PANGAPNG Game init event 79
 	 */
 	public static final int _ANSWER_PANGPANG_INIT_GAME_PLAY = 0x0000004f;
 	
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 80
+	 * Request PANGAPNG Game reinit event 80
 	 */
 	public static final int _REQUEST_PANGPANG_REINIT_GAME_PLAY = 0x00000050;
 
 	/**
-	 * Answer METEORGAME STONE REINIT GAME PLAY 81
+	 * Answer PANGAPNG Game reinit event 81
 	 */
 	public static final int _ANSWER_PANGPANG_REINIT_GAME_PLAY = 0x00000051;
 	
     /**
-     * Request METEORGAME STONE REINIT GAME PLAY 82
+     * Answer PANGAPNG Game start 82
      */
     public static final int _ANSWER_PANGPANG_PLAY_START = 0x00000052;
     
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 83
+	 * Request PANGAPNG Game player moving event 83
 	 */
 	public static final int _REQUEST_PANGPANG_PLAYER_MOVING = 0x00000053;
 
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 84
+	 * Answer PANGAPNG Game player moving event 84
 	 */
 	public static final int _ANSWER_PANGPANG_PLAYER_MOVING = 0x00000054;
 
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 85
+	 * Request METEORGAME player size UP 85
 	 */
 	public static final int _REQUEST_METEORGAME_METEOR_PLAYER_SIZE_UP = 0x00000055;
 	
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 86
+	 * Answer METEORGAME player size up 86
 	 */
 	public static final int _ANSWER_METEORGAME_METEOR_PLAYER_SIZE_UP = 0x00000056;
 	
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 87
+	 * Request PANGAPNG out of the room 87
 	 */
 	public static final int _REQUEST_PANGPANG_OUT_OF_PLAYER = 0x00000057;
 	
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 88
+	 * Answer PANGPANG out of the room 88
 	 */
 	public static final int _ANSWER_PANGPANG_OUT_OF_PLAYER = 0x00000058;
 	
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 89
+	 * Answer PANGAPNG Enemy information event 89
 	 */
 	public static final int _ANSWER_PANGPANG_ENEMY_EVENT = 0x00000059;
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 90
+	 * Answer PANGAPNG Enemy init event 90
 	 */
 	public static final int _ANSWER_PANGPANG_ENEMY_INIT = 0x0000005a;
 	
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 91
+	 * Answer PANGAPNG Enemy Attack event 91
 	 */
-	public static final int _ANSWER_PANGAPNG_ENEY_ATTACK = 0x0000005b;
+	public static final int _ANSWER_PANGAPNG_ENEMY_ATTACK = 0x0000005b;
 
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 92
+	 * Request PANGAPNG player Attack event 92
 	 */
 	public static final int _REQUEST_PANGAPNG_ATTACK = 0x0000005c;
 	
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 93
+	 * Answer PangPang player Attack event 93
 	 */
 	public static final int _ANSWER_PANGAPNG_ATTACK = 0x0000005d;
 	
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 94
+	 * Request PangPang Enemy Collision event 94
 	 */
 	public static final int _REQUEST_PANGAPNG_ENEMY_COLLISION_EVENT = 0x0000005e;
 	
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 95
+	 * Answer PangPang Enemy Collision event 95
 	 */
 	public static final int _ANSWER_PANGAPNG_ENEMY_COLLISION_EVENT = 0x0000005f;
 	
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 96
+	 * Request PangPang Game finish defeat 96
 	 */
 	public static final int _REQUEST_PANGAPNG_FINISH = 0x00000060;
 	
 	/**
-	 * Request METEORGAME STONE REINIT GAME PLAY 97
+	 * Request PangPang game finish win 97
 	 */
 	public static final int _REQUEST_PANGAPNG_FINISH_WIN = 0x00000061;
 	
@@ -676,52 +676,126 @@ public class Settings {
 	 */
 	public static final int nConnectionServerPortNumber = 5001;
 
+	/**
+	 * sprite sheet size width
+	 */
 	public static final float fSPRITEGAMEWIDTH = 320;
 
+	/**
+	 * sprite sheet size height
+	 */
 	public static final float fSPRITEGAMEHEIGHT = 480;
 
-	public static final String sEncryptKey = "fe8025947de7cd71";
+	/**
+	 * encryption algorithm style
+	 */
 	
 	public static final String ALGO = "AES";
-    
+
+	/**
+	 * encryption key number 32bits
+	 */
+	public static final String sEncryptKey = "fe8025947de7cd71";
+	
+	/**
+	 * encryption key number 64bits
+	 */
+	
 	public static final String keyStr = "Z8LSq0wWwB5v+6YJzurcP463H3F12iZh74fDj4S74oUH4EONkiKb2FmiWUbtFh97GG/c/lbDE47mvw6j94yXxKHOpoqu6zpLKMKPcOoSppcVWb2q34qENBJkudXUh4MWcreondLmLL2UyydtFKuU9Sa5VgY/CzGaVGJABK2ZR94=";
 
+	/**
+	 * receving buffer size
+	 */
 	public static int nReceiveBufferSize = 10000;
 
+	/**
+	 * client version number for using updating check
+	 */
 	public static String clientVersion = "0.0.1v";
 
+	/**
+	 * building time for using debugging
+	 */
 	public static int nBuildingTimes;
 
+	/**
+	 * buildingVersion File Name
+	 */
 	public static final String sBuildingVersionFileName = "clientV.jrc";
 
+	/**
+	 * debugging mode
+	 */
 	public static final boolean isDevelopingMode = true;
 
+	/**
+	 * sending split protocol token
+	 */
 	public static final String sSenderSplitProtocolToken = "/&&";
 
+	/**
+	 * receiving split protocol token
+	 */
 	public static final String sReceiverSplitProtocolToken = "/&";
 
+	/**
+	 * sender split multiple token
+	 */
 	public static final String sSenderSplitMultipleToken = "@";
 
+	/**
+	 * receiver split multiple token
+	 */
 	public static final String sReceiverSplitMultipleToken = "@";
 	
-    public static final String sPangPangPositionInformationWordToken = "!!";
+    /**
+     * pangapng Game information inner token
+     */
+	public static final String sPangPangPositionInformationWordToken = "!!";
     
+	/**
+	 * pangpang Game information outer token
+	 */
     public static final String sPangPangPositionCoordinationToken = ">!";
 
+    /**
+     * version check on-off
+     */
 	public static boolean isClientVersionCheck = false;
 
+	/**
+	 * saving command list - size
+	 */
 	public static final int nMaximumSizeOfCommandsContainer = 20;
 	
+	/**
+	 * pangpang Game enemy width
+	 */
     public static final int nPangPangEnemyWidth = 8;
-    
+ 
+    /**
+     * pangpang Game enemy height
+     */
     public static final int nPangPangEnemyHeight = 6;
     
+    /**
+     * enemy die event cooltime
+     */
     public static final int nEffectPoolSize = 20;
     
+    /**
+     * sound crash effect name
+     */
     public static final String saCrashEffect = "shut";
     
+    /**
+     * music background path
+     */
     public static final String saPangPangBGM = "/Asset/music.mp3";
     
+    /**
+     * audio crash path
+     */
     public static final String saPangPangCrashBGM = "/Asset/crash.wav";
 
 }

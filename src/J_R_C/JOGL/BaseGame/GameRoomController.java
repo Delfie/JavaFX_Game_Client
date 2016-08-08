@@ -1161,7 +1161,7 @@ public class GameRoomController implements Initializable {
 
 			if (Integer.parseInt(packet[2]) == client.getClientUniqueGameTagNumber()) {
 				setPlayToken(true);
-				client.sendPacket(Settings._REQUES_TTICTACTOC_TURN_PLAYER_NAME + "", getnInitRoomNumber() + "",
+				client.sendPacket(Settings._REQUEST_TICTACTOC_TURN_PLAYER_NAME + "", getnInitRoomNumber() + "",
 						client.getClientName());
 			} else
 				setPlayToken(false);
@@ -1590,7 +1590,7 @@ public class GameRoomController implements Initializable {
 
 				});
 
-				client.sendPacket(Settings._REQUES_TTICTACTOC_TURN_PLAYER_NAME + "", getnInitRoomNumber() + "",
+				client.sendPacket(Settings._REQUEST_TICTACTOC_TURN_PLAYER_NAME + "", getnInitRoomNumber() + "",
 						client.getClientName());
 
 				if (Integer.parseInt(packet[8]) != Settings.ERRORCODE) {
@@ -1700,7 +1700,7 @@ public class GameRoomController implements Initializable {
 
 				});
 
-				client.sendPacket(Settings._REQUES_TTICTACTOC_TURN_PLAYER_NAME + "", getnInitRoomNumber() + "",
+				client.sendPacket(Settings._REQUEST_TICTACTOC_TURN_PLAYER_NAME + "", getnInitRoomNumber() + "",
 						client.getClientName());
 
 				if (Integer.parseInt(packet[5]) == client.getClientUniqueGameTagNumber())

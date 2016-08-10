@@ -10,7 +10,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import GraphicUtility.SplitPacketManager;
-import ServerMainBody.Settings;
 import Utility.EncryptionManager;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
@@ -412,6 +411,10 @@ public class ServerClient {
 
 					case Settings._ANSWER_PANGAPNG_PLAYER_DEATH:
 						((GameRoomController) gameRoomController).pangpangPlayerRemove(splitPacket);
+						break;
+						
+					case Settings._ERROR_PACKET:
+						System.err.println("error Protocol can't parsing this packet");
 						break;
 
 					default:

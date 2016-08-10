@@ -38,16 +38,22 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
- * @author KJW finish at 2016/ 02/ 15
- * @version 1.0.0v
+ * @author KJW finish at 2016/ 08/ 11
+ * @version 2.0.0v
  * @description this class for the Waiting Room, this class manage the All of
  *              event in the WaitingRoom.
  * @copyRight of KJW all Rights Reserved and follow the MIT license
  */
 public class WaitingRoomsManagerController implements Initializable {
 
+	/**
+	 * room name String maximum length
+	 */
 	private final int ROOMNAMEMAXIMUMLENGTH = 5;
 
+	/**
+	 * room member String maximum length
+	 */
 	private final int ROOMMAMBERMAXIMUMLENGTH = 1;
 	/**
 	 * sending masseage maximum size
@@ -167,12 +173,24 @@ public class WaitingRoomsManagerController implements Initializable {
 	 */
 	private ScheduledExecutorService scheduler;
 
+	/**
+	 * input string container sending massage
+	 */
 	private String[] sCommandsContainer;
 
+	/**
+	 * input string container indicator position
+	 */
 	private int nCommandIndicatorPoisition;
 
+	/**
+	 * input string container indicator
+	 */
 	private int nCommandsContainerIndicator;
 
+	/**
+	 * first position about container
+	 */
 	private int _firstPoistion;
 
 	/*

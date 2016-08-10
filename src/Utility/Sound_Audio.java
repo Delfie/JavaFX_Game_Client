@@ -8,42 +8,47 @@ import java.util.concurrent.Executors;
 
 import javafx.scene.media.AudioClip;
 
+/**
+ * @author KJW finish at 2016/ 08/ 11
+ * @version 2.0.0v
+ * @description this class effect sound audio class
+ * @copyRight of KJW all Rights Reserved and follow the MIT license
+ */
 public class Sound_Audio {
 	ExecutorService soundPool = Executors.newFixedThreadPool(2);
 	Map<String, AudioClip> soundEffectsMap = new HashMap<>();
 
 	/**
-	 * Constructor to create a simple thread pool.
-	 *
+	 * sound_Audio constructor
+	 * 
 	 * @param numberOfThreads
-	 *            - number of threads to use media players in the map.
+	 *            effect sound pool size (unit <-- play sound number at the same
+	 *            time
 	 */
 	public Sound_Audio(int numberOfThreads) {
 		soundPool = Executors.newFixedThreadPool(numberOfThreads);
 	}
 
 	/**
-	 * Load a sound into a map to later be played based on the id.
-	 *
+	 * load the sound
+	 * 
 	 * @param id
-	 *            - The identifier for a sound.
+	 *            string type index
 	 * @param url
-	 *            - The url location of the media or audio resource. Usually in
-	 *            src/main/resources directory.
+	 *            loading file path
 	 */
-	public void loadSoundEffects(String id, String url) {
+	public void load_Sound_Effects(String id, String url) {
 		URL resource = getClass().getResource(url);
 		AudioClip sound = new AudioClip(resource.toString());
 		soundEffectsMap.put(id, sound);
 	}
 
 	/**
-	 * Lookup a name resource to play sound based on the id.
-	 *
+	 * play the sound named id(index)
+	 * 
 	 * @param id
-	 *            identifier for a sound to be played.
 	 */
-	public void playSound(final String id) {
+	public void play_Effect_Sound(final String id) {
 		Runnable soundPlay = new Runnable() {
 			@Override
 			public void run() {
@@ -54,9 +59,9 @@ public class Sound_Audio {
 	}
 
 	/**
-	 * Stop all threads and media players.
+	 * stop all of sound in this sound pool
 	 */
-	public void shutdown() {
+	public void turnoff() {
 		soundPool.shutdown();
 	}
 

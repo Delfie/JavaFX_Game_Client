@@ -32,8 +32,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
- * @author KJW finish at 2016/ 02/ 15
- * @version 1.0.0v
+ * @author KJW finish at 2016/ 08/ 11
+ * @version 2.0.0v
  * @description this class Manage The Login window
  * @copyRight of KJW all Rights Reserved and follow the MIT license
  */
@@ -189,7 +189,10 @@ public class LoginController implements Initializable {
 		client.setLoginController(this);
 
 	}
-	
+	/**
+	 * hand btn key event
+	 * @param e
+	 */
     public void handleBtnKeyEvent(KeyEvent e) {
         switch (e.getCode()) {
             case ENTER:
@@ -422,6 +425,10 @@ public class LoginController implements Initializable {
 
 	}
 
+	/**
+	 * client version check module
+	 * @param packet
+	 */
 	public void clientVersionCheck(String[] packet) {
 		boolean isCheck = Boolean.parseBoolean(packet[1]);
 
@@ -435,6 +442,9 @@ public class LoginController implements Initializable {
 		}
 	}
 	
+	/**
+	 * defeault version set
+	 */
 	public void defaultVersionSet()
 	{
 		Settings.isClientVersionCheck = true;
@@ -467,6 +477,11 @@ public class LoginController implements Initializable {
 
 	}
 
+	/**
+	 * check the continuous server connection
+	 * @author KJW
+	 *
+	 */
 	class TimeService extends Service<Integer> {
 		@Override
 		protected Task<Integer> createTask() {

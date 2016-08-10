@@ -49,8 +49,8 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 /**
- * @author KJW finish at 2016/ 02/ 15
- * @version 1.0.0v
+ * @author KJW finish at 2016/ 08/ 11
+ * @version 2.0.0v
  * @description this class Manage The all the game window's state
  * @copyRight of KJW all Rights Reserved and follow the MIT license
  */
@@ -308,7 +308,7 @@ public class GameRoomController implements Initializable {
 
 		effectSoundManager = new Sound_Audio(Settings.nEffectPoolSize);
 
-		effectSoundManager.loadSoundEffects(Settings.saCrashEffect, Settings.saPangPangCrashBGM);
+		effectSoundManager.load_Sound_Effects(Settings.saCrashEffect, Settings.saPangPangCrashBGM);
 
 		// game play board size
 		anchorPane.setMaxSize(GameViewMaximumWidth, GameViewMaximumHeight);
@@ -392,7 +392,7 @@ public class GameRoomController implements Initializable {
 		else if (getnGameType() == Settings.nGamePangPang) {
 			spriteAnimationTimer.stop();
 			soundPangPangBackground.stopMusic();
-			effectSoundManager.shutdown();
+			effectSoundManager.turnoff();
 		}
 		Stage stage = (Stage) primaryStage.getScene().getWindow();
 
@@ -660,7 +660,7 @@ public class GameRoomController implements Initializable {
 						if (bubbles.get(j).getPositionX() != 0 && bubbles.get(j).getPositionY() != 0
 								&& bubbles.get(j).intersects(player_Missiles.get(i))) {
 							player_Missiles.remove(i);
-							effectSoundManager.playSound(Settings.saCrashEffect);
+							effectSoundManager.play_Effect_Sound(Settings.saCrashEffect);
 							client.sendPacket(Settings._REQUEST_PANGAPNG_ENEMY_COLLISION_EVENT + "",
 									getnInitRoomNumber() + "", bubbles.get(j).getsPlayerName());
 

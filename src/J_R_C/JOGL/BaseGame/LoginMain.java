@@ -16,8 +16,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * @author KJW finish at 2016/ 02/ 15
- * @version 1.0.0v
+ * @author KJW finish at 2016/ 08/ 11
+ * @version 2.0.0v
  * @description this class Start The Application and Set The init State
  * @copyRight of KJW all Rights Reserved and follow the MIT license
  */
@@ -76,6 +76,9 @@ public class LoginMain extends Application {
 		launch(args);
 	}
 
+	/**
+	 * save the build time information into serverinfo.jrc using encrypt 64 bits
+	 */
 	private void fileSetBuildingTime() {
 		PrintWriter pw;
 		try {
@@ -92,6 +95,9 @@ public class LoginMain extends Application {
 
 	}
 
+	/**
+	 * read the build time information into serverinfo.jrc using decrypt 64bits
+	 */
 	private void BuildingTimeReadFile() {
 		BufferedReader br;
 		try {

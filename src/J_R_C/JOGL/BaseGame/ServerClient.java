@@ -9,14 +9,14 @@ import java.net.Socket;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import GraphicUtility.SplitPacketManager;
 import Utility.EncryptionManager;
+import Utility.SplitPacketManager;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 
 /**
- * @author KJW finish at 2016/ 02/ 15
- * @version 1.0.0v
+ * @author KJW finish at 2016/ 08/ 11
+ * @version 2.0.0v
  * @description this class Manage The server client
  * @copyRight of KJW all Rights Reserved and follow the MIT license
  */
@@ -323,100 +323,101 @@ public class ServerClient {
 					case Settings._ANSWER_SET_THE_CATCHME_PLAY_COUNT:
 						((GameRoomController) gameRoomController).setCatchmePlayCount(splitPacket);
 						break;
-
+					// check the client click the Meteor Game screen event
 					case Settings._ANSWER_METEORGAME_SET_CLIECK_EVENT:
 						((GameRoomController) gameRoomController).setMeteorGamePlayerPosition(splitPacket);
 						break;
-
+					// init the meteor game
 					case Settings._ANSWER_METEORGAME_INIT_GAME_PLAY:
 						((GameRoomController) gameRoomController).initMeteorGamePlayerGamePosition(splitPacket);
 						break;
-
+					// init the pangapng game
 					case Settings._ANSWER_PANGPANG_INIT_GAME_PLAY:
 						((GameRoomController) gameRoomController).initPangPangGamePlayerGamePosition(splitPacket);
 						break;
+					// reinit the meteor game
 					case Settings._ANSWER_METEORGAME_REINIT_GAME_PLAY:
 						((GameRoomController) gameRoomController).initReMeteorGamePlayerGamePosition(splitPacket);
 						break;
+					// reinit the pangpang game
 					case Settings._ANSWER_PANGPANG_REINIT_GAME_PLAY:
 						((GameRoomController) gameRoomController).initRePangPangGamePlayerGamePosition(splitPacket);
 						break;
-
+					// meteor game client out event
 					case Settings._ANSWER_METEORGAME_OUT_OF_PLAYER:
 						if (!splitPacket[1].equals(getClientName()))
 							((GameRoomController) gameRoomController).outOfPlayerInMeteorGame(splitPacket);
 						break;
-
+					// pangapng game client out event
 					case Settings._ANSWER_PANGPANG_OUT_OF_PLAYER:
 						if (!splitPacket[1].equals(getClientName()))
 							((GameRoomController) gameRoomController).outOfPlayerInPangPang(splitPacket);
 						break;
-
+					// meteor asteroid init 100 -> 200 -> 300
 					case Settings._ANSWER_METEORGAME_UNIVERSE_INIT:
 						((GameRoomController) gameRoomController).initMeteorGameWhenStartGame(splitPacket);
 						break;
-
+					// meteor game client moving event
 					case Settings._ANSWER_METEORGAME_PLAYER_MOVING:
 						((GameRoomController) gameRoomController).updateMeteorGamePlayerPosition(splitPacket);
 						break;
-
+					// pangpang player moving event
 					case Settings._ANSWER_PANGPANG_PLAYER_MOVING:
 						((GameRoomController) gameRoomController).updatePangPangPlayerPosition(splitPacket);
 						break;
-
+					// start meteor game
 					case Settings._ANSWER_METEORGAME_PLAY_START:
 						((GameRoomController) gameRoomController).StartPrepareCompleteMeteorGame(splitPacket);
 						break;
-
+					// start pangapng game
 					case Settings._ANSWER_PANGPANG_PLAY_START:
 						((GameRoomController) gameRoomController).StartPrepareCompletePangPang(splitPacket);
 						break;
-
+					// delete meteorgame asteroid
 					case Settings._ANSWER_METEORGAME_METEOR_DELETE:
 						((GameRoomController) gameRoomController).deleteMeteorGameMeteor(splitPacket);
 						break;
-
+					// finish the meteor game
 					case Settings._ANSWER_METEORGAME_METEOR_GAME_FINISH:
 						((GameRoomController) gameRoomController).setFinishMeteorGame();
 						break;
-
+					// client version check event
 					case Settings._ANSWER_PC_CLIENT_VERSION_CHECK:
 						((LoginController) loginController).clientVersionCheck(splitPacket);
 						break;
-
+					// size up meteor game player
 					case Settings._ANSWER_METEORGAME_METEOR_PLAYER_SIZE_UP:
 						((GameRoomController) gameRoomController).meteorGamePlayerSizeUP(splitPacket);
 						break;
-
+					// pangpang enemy movement event
 					case Settings._ANSWER_PANGPANG_ENEMY_EVENT:
 						((GameRoomController) gameRoomController).pangpangEnemyPositionUpdate(splitPacket);
 						break;
-
+					// pangpang enemy init event
 					case Settings._ANSWER_PANGPANG_ENEMY_INIT:
 						((GameRoomController) gameRoomController).pangpangEnemyInit(splitPacket);
 						break;
-
+					// pangpang enemy attack event
 					case Settings._ANSWER_PANGAPNG_ENEMY_ATTACK:
 						((GameRoomController) gameRoomController).enemyMissileUpdate(splitPacket);
 						break;
-					// process unExist protocols
-
+					// pangpang player attack event
 					case Settings._ANSWER_PANGAPNG_ATTACK:
 						((GameRoomController) gameRoomController).pangpangMissileUpdate(splitPacket);
 						break;
-
+					// pangpang Enemy collision event
 					case Settings._ANSWER_PANGAPNG_ENEMY_COLLISION_EVENT:
 						((GameRoomController) gameRoomController).pangpangEnemyRemove(splitPacket);
 						break;
-
+					// pangpang player death event
 					case Settings._ANSWER_PANGAPNG_PLAYER_DEATH:
 						((GameRoomController) gameRoomController).pangpangPlayerRemove(splitPacket);
 						break;
-						
+					// error pacekt
 					case Settings._ERROR_PACKET:
 						System.err.println("error Protocol can't parsing this packet");
 						break;
-
+					// process unExist protocols
 					default:
 						System.err.println("[" + protocol + "] this protocol do not exist in the protocol list");
 						break;
@@ -555,7 +556,7 @@ public class ServerClient {
 	}
 
 	/**
-	 * get client name stiring
+	 * get client name string
 	 * 
 	 * @return
 	 */

@@ -10,6 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import GraphicUtility.SplitPacketManager;
+import ServerMainBody.Settings;
 import Utility.EncryptionManager;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
@@ -407,6 +408,10 @@ public class ServerClient {
 
 					case Settings._ANSWER_PANGAPNG_ENEMY_COLLISION_EVENT:
 						((GameRoomController) gameRoomController).pangpangEnemyRemove(splitPacket);
+						break;
+
+					case Settings._ANSWER_PANGAPNG_PLAYER_DEATH:
+						((GameRoomController) gameRoomController).pangpangPlayerRemove(splitPacket);
 						break;
 
 					default:

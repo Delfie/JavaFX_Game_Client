@@ -99,7 +99,7 @@ public class EncryptionManager {
 			return decryptedValue;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			System.out.println(e);
+			System.out.println("packet: "+ encryptedData + " error: " +e);
 		}
 
 		return null;

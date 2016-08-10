@@ -4,6 +4,7 @@ package J_R_C.JOGL.BaseGame;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -60,6 +61,8 @@ public class GameRoomController implements Initializable {
 	private Sound_Audio effectSoundManager;
 
 	private final int SENDINGMESSAGEMAXLENGTH = 70;
+
+	DecimalFormat df;
 
 	/**
 	 * this button for exiting the game room window
@@ -299,6 +302,8 @@ public class GameRoomController implements Initializable {
 		this.setGameStart(false);
 		lbCatchmePlayCount.setVisible(false);
 		lbPlayerTurn.setVisible(false);
+		df = new DecimalFormat("#.##");
+
 		sCommandsContainer = new String[Settings.nMaximumSizeOfCommandsContainer];
 
 		effectSoundManager = new Sound_Audio(Settings.nEffectPoolSize);
@@ -676,7 +681,8 @@ public class GameRoomController implements Initializable {
 							if (pangPangPlayers.get(j).isDeath()) {
 
 								displayText("[" + pangPangPlayers.get(j).getsPlayerName() + "] is death");
-								pangPangPlayers.remove(j);
+								client.sendPacket(Settings._REQUEST_PANGAPNG_PLAYER_DEATH + "",
+										getnInitRoomNumber() + "", pangPangPlayers.get(j).getsPlayerName());
 
 							}
 						}
@@ -1799,6 +1805,12 @@ public class GameRoomController implements Initializable {
 
 		}
 		isPangPangEnemyStackRunning = false;
+	}
+
+	public void pangpangPlayerRemove(String[] packet) {
+		for (int i = 0; i < pangPangPlayers.size(); i++)
+			if (pangPangPlayers.get(i).getsPlayerName().equals(packet[1]))
+				pangPangPlayers.remove(i);
 	}
 
 	public void pangpangEnemyRemove(String[] packet) {

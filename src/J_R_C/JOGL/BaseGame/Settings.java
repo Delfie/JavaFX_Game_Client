@@ -501,6 +501,15 @@ public class Settings {
 	 */
 	public static final int _REQUEST_PANGAPNG_FINISH_WIN = 0x00000061;
 	
+	/**
+	 * Request PangPang Player Death 98
+	 */
+	public static final int _REQUEST_PANGAPNG_PLAYER_DEATH = 0x00000062;
+
+	/**
+	 * Answer PangPang Player Death 99
+	 */
+	public static final int _ANSWER_PANGAPNG_PLAYER_DEATH = 0x00000062;
 	
 	// Asset Constant
 

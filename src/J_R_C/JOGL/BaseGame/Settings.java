@@ -674,10 +674,19 @@ public class Settings {
 	 */
 	public static final int nPasswordMaximumLength = 7;
 
+	/**
+	 * setting asteroid game enemy number
+	 */
 	public static final int nSettingAsteroidNumber = 100;
 
+	/**
+	 * set game screen size width - meteor game, pangpang
+	 */
 	public static final int nGameAsteroidSceneWidth = 360;
 
+	/**
+	 * set game screen size height - meteor game, pangpang
+	 */
 	public static final int nGameAsteroidSceneHeight = 280;
 
 	/**

@@ -49,19 +49,31 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 /**
- * @author KJW finish at 2016/ 08/ 11
+ * @author KJW finish at 2016/ 08/ 14
  * @version 2.0.0v
  * @description this class Manage The all the game window's state
  * @copyRight of KJW all Rights Reserved and follow the MIT license
  */
 public class GameRoomController implements Initializable {
 
+	/**
+	 * sound controller for music -background
+	 */
 	private Sound_Music soundPangPangBackground;
 
+	/**
+	 * sond controller for audio -for effect sound
+	 */
 	private Sound_Audio effectSoundManager;
 
+	/**
+	 * sending message maximum length
+	 */
 	private final int SENDINGMESSAGEMAXLENGTH = 70;
 
+	/**
+	 * decemal format changer
+	 */
 	DecimalFormat df;
 
 	/**
@@ -118,6 +130,9 @@ public class GameRoomController implements Initializable {
 	@FXML
 	private AnchorPane anchorPane;
 
+	/**
+	 * Main Pane for game control
+	 */
 	@FXML
 	private AnchorPane mainPane;
 
@@ -145,6 +160,9 @@ public class GameRoomController implements Initializable {
 	@FXML
 	private Label lbCatchmePlayCount;
 
+	/**
+	 * player turn label
+	 */
 	@FXML
 	private Label lbPlayerTurnBlockText;
 
@@ -223,59 +241,141 @@ public class GameRoomController implements Initializable {
 	 */
 	private int nPossiblePlayNumber;
 
+	/**
+	 * spriter animation timer. call this class per time decided programmer
+	 */
 	private AnimationTimer spriteAnimationTimer;
 
+	/**
+	 * input event container
+	 */
 	private ArrayList<String> input = new ArrayList<String>();
 
+	/**
+	 * meteorgame player array list
+	 */
 	private ArrayList<Player> players = new ArrayList<Player>();
 
+	/**
+	 * pangpang player array list
+	 */
 	private ArrayList<PangPangPlayer> pangPangPlayers = new ArrayList<PangPangPlayer>();
 
+	/**
+	 * meteoger game asteroids array lisy
+	 */
 	private ArrayList<Player> asteroids = new ArrayList<Player>();
 
+	/**
+	 * pangpang game enemy buubles array list
+	 */
 	private ArrayList<PangPangEnemy> bubbles = new ArrayList<PangPangEnemy>();
 
+	/**
+	 * pangpang bubbles crash effect
+	 */
 	private ArrayList<Explosion_Effect> pangpang_bubbles_effects = new ArrayList<Explosion_Effect>();
 
+	/**
+	 * pangpang bubbles missile
+	 */
 	private ArrayList<Enemy_Missile> bubbles_missiles = new ArrayList<Enemy_Missile>();
 
+	/**
+	 * pangpang playsr missiles
+	 */
 	private ArrayList<Enemy_Missile> player_Missiles = new ArrayList<Enemy_Missile>();
 
+	/**
+	 * meteor game main player
+	 */
 	private Player clientMainPlayer;
 
+	/**
+	 * pangapng main player
+	 */
 	private PangPangPlayer clientPangPangMainPlayer;
 
+	/**
+	 * meteor game start position x
+	 */
 	private double meteriorGamePlayerPositionX;
 
+	/**
+	 * meteor game start position y
+	 */
 	private double meteriorGamePlayerPositionY;
 
+	/**
+	 * meteor game prepare finish tag
+	 */
 	private boolean isMeteorGameStartPrepareFinish;
 
+	/**
+	 * pangpang game prepare finish tag
+	 */
 	private boolean isPangPangStartPrepareFinish;
 
+	/**
+	 * meteor game astroy destroyed count
+	 */
 	private int nMeteorGameDestroyCount;
 
+	/**
+	 * meteor game end finish check tag
+	 */
 	private boolean isMeteorGameFinishCheck;
 
+	/**
+	 * meteor game winner id
+	 */
 	private String sNowMeteorGameWinner;
 
+	/**
+	 * shell command saving container
+	 */
 	private String[] sCommandsContainer;
 
+	/**
+	 * comment list indicator
+	 */
 	private int nCommandIndicatorPoisition;
 
+	/**
+	 * comment container indicator
+	 */
 	private int nCommandsContainerIndicator;
 
 	private long nPangPangMissileNumber;
 
+	/**
+	 * first player position
+	 */
 	int _firstPoistion;
 
+	/**
+	 * init tag
+	 */
 	private boolean isInit = false;
 
+	/**
+	 * pangoang enemy stack
+	 */
 	private String sPangPangEnemyStack;
+
+	/**
+	 * pangpang stack running tag
+	 */
 	private boolean isPangPangEnemyStackRunning;
 
+	/**
+	 * pangapng score
+	 */
 	private int nPangPangScore;
 
+	/**
+	 * roomnumber initialize
+	 */
 	private long nInitRoomNumber;
 
 	// = new GraphicsContextSprite("box.png", 100, 100);
@@ -544,6 +644,9 @@ public class GameRoomController implements Initializable {
 		anchorPane.getChildren().add(imageview);
 	}
 
+	/**
+	 * draw pangapng game -managing every thing related on pangapng
+	 */
 	private void drawSpriteImageViewPangPang() {
 		client.sendPacket(Settings._REQUEST_PANGPANG_INIT_GAME_PLAY + "", getnInitRoomNumber() + "",
 				client.getClientName());
@@ -573,6 +676,9 @@ public class GameRoomController implements Initializable {
 		initPangPangBubbles();
 		ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 10);
 
+		/*
+		 * pangapng Game mainbody
+		 */
 		spriteAnimationTimer = new AnimationTimer() {
 
 			boolean isGameRunning = true;
@@ -583,6 +689,7 @@ public class GameRoomController implements Initializable {
 				double elapsedTime = (currentNanoTime - lastNanoTime) / 1000000000.0;
 				lastNanoTime = currentNanoTime;
 
+				// init part
 				if (isGameRunning == false)
 					return;
 
@@ -601,6 +708,7 @@ public class GameRoomController implements Initializable {
 
 					boolean isClick = false;
 
+					// input event processor
 					if (input.contains("LEFT")) {
 						if (clientPangPangMainPlayer.getDirection() != GraphicsContextSprite.LEFT) {
 							clientPangPangMainPlayer.setDirection(GraphicsContextSprite.LEFT);
@@ -774,6 +882,9 @@ public class GameRoomController implements Initializable {
 
 	}
 
+	/**
+	 * managing MeteorGame
+	 */
 	private void drawSpriteImageViewMeteor() {
 		client.sendPacket(Settings._REQUEST_METEORGAME_INIT_GAME_PLAY + "", getnInitRoomNumber() + "",
 				client.getClientName());
@@ -785,6 +896,7 @@ public class GameRoomController implements Initializable {
 
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 
+		// sending click event
 		anchorPane.getScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				client.sendPacket(Settings._REQUEST_METEORGAME_SET_CLIECK_EVENT + "", getnInitRoomNumber() + "",
@@ -795,6 +907,9 @@ public class GameRoomController implements Initializable {
 
 		GraphicsContextSprite background = new GraphicsContextSprite("/Asset/space.jpg", 0, 0, 640, 480);
 
+		/*
+		 * proecessing everything on this parts
+		 */
 		spriteAnimationTimer = new AnimationTimer() {
 
 			Long lastNanoTime = new Long(System.nanoTime());
@@ -807,6 +922,9 @@ public class GameRoomController implements Initializable {
 				// game logic
 				if (isMeteorGameStartPrepareFinish && isGameStart()) {
 
+					/*
+					 * click event
+					 */
 					if (input.contains("LEFT"))
 						clientMainPlayer.addVelocity(-3, 0);
 					if (input.contains("RIGHT"))
@@ -818,6 +936,7 @@ public class GameRoomController implements Initializable {
 				} else if (clientMainPlayer != null)
 					clientMainPlayer.setVelocity(0, 0);
 
+				// update parts
 				if (clientMainPlayer != null) {
 					clientMainPlayer.update(elapsedTime);
 
@@ -877,6 +996,11 @@ public class GameRoomController implements Initializable {
 
 	}
 
+	/**
+	 * chcek unit bound on the main game scene
+	 * 
+	 * @param playerBound
+	 */
 	private void checkBound(GraphicsContextSprite playerBound) {
 		if (playerBound.getPositionX() < playerBound.getImageSizeX() / 2)
 			playerBound.setPositionX(playerBound.getImageSizeX() / 2);
@@ -917,6 +1041,11 @@ public class GameRoomController implements Initializable {
 
 	}
 
+	/**
+	 * handle button release event for dynamic graphic game
+	 * 
+	 * @param e
+	 */
 	public void handleBtnKeyReleaseEvent(KeyEvent e) {
 		if (!input.isEmpty())
 			input.clear();
@@ -980,12 +1109,20 @@ public class GameRoomController implements Initializable {
 		}
 	}
 
+	/**
+	 * commend text saving container
+	 */
 	private void setServerCommandTextEdit() {
 		Platform.runLater(() -> cheatingTextEdit.setText(sCommandsContainer[nCommandIndicatorPoisition]));
 		Platform.runLater(() -> cheatingTextEdit.positionCaret(cheatingTextEdit.getLength()));
 
 	}
 
+	/**
+	 * meteor game key event managing parts
+	 * 
+	 * @param e
+	 */
 	private void meteorGameInputKeyManager(KeyEvent e) {
 		String code = e.getCode().toString();
 		if (!input.contains(code))
@@ -1306,6 +1443,11 @@ public class GameRoomController implements Initializable {
 
 	}
 
+	/**
+	 * init pangpang game when first time
+	 * 
+	 * @param packet
+	 */
 	public void initPangPangGamePlayerGamePosition(String[] packet) {
 		if (Settings.ERRORCODE != checkPlayerInThePangPang(packet[1]))
 			return;
@@ -1328,6 +1470,11 @@ public class GameRoomController implements Initializable {
 		}
 	}
 
+	/**
+	 * init meteorgame when first time
+	 * 
+	 * @param packet
+	 */
 	public void initMeteorGamePlayerGamePosition(String[] packet) {
 		if (Settings.ERRORCODE != checkPlayerInTheMeteorGame(packet[1]))
 			return;
@@ -1352,6 +1499,12 @@ public class GameRoomController implements Initializable {
 
 	}
 
+	/**
+	 * init meteor game colors which is used for determining each player
+	 * 
+	 * @param packet
+	 * @return
+	 */
 	private Player initMeteorPlayerColor(String packet) {
 		Player player;
 		if (client.getClientName().equals(packet))
@@ -1361,6 +1514,12 @@ public class GameRoomController implements Initializable {
 		return player;
 	}
 
+	/**
+	 * check player stay in meteor game
+	 * 
+	 * @param name
+	 * @return
+	 */
 	private int checkPlayerInTheMeteorGame(String name) {
 		for (int i = 0; i < players.size(); i++)
 			if (players.get(i).getsPlayerName().equals(name))
@@ -1368,6 +1527,12 @@ public class GameRoomController implements Initializable {
 		return Settings.ERRORCODE;
 	}
 
+	/**
+	 * check player stay in pangpang game
+	 * 
+	 * @param name
+	 * @return
+	 */
 	private int checkPlayerInThePangPang(String name) {
 		for (int i = 0; i < pangPangPlayers.size(); i++)
 			if (pangPangPlayers.get(i).getsPlayerName().equals(name))
@@ -1375,6 +1540,11 @@ public class GameRoomController implements Initializable {
 		return Settings.ERRORCODE;
 	}
 
+	/**
+	 * re init the pangpang game for second time
+	 * 
+	 * @param packet
+	 */
 	public void initRePangPangGamePlayerGamePosition(String[] packet) {
 		boolean isExisted = false;
 
@@ -1399,6 +1569,11 @@ public class GameRoomController implements Initializable {
 
 	}
 
+	/**
+	 * re init meteor game for second time
+	 * 
+	 * @param packet
+	 */
 	public void initReMeteorGamePlayerGamePosition(String[] packet) {
 		boolean isExisted = false;
 
@@ -1425,14 +1600,29 @@ public class GameRoomController implements Initializable {
 
 	}
 
+	/**
+	 * process player out of room event in meteorgame
+	 * 
+	 * @param packet
+	 */
 	public void outOfPlayerInMeteorGame(String[] packet) {
 		players.remove(checkPlayerInTheMeteorGame(packet[1]));
 	}
 
+	/**
+	 * process player out of room event in pangpang game
+	 * 
+	 * @param packet
+	 */
 	public void outOfPlayerInPangPang(String[] packet) {
 		pangPangPlayers.remove(checkPlayerInThePangPang(packet[1]));
 	}
 
+	/**
+	 * init meteor game when start the meteor game
+	 * 
+	 * @param packet
+	 */
 	public void initMeteorGameWhenStartGame(String[] packet) {
 		Player asteroid = new Player("/Asset/box.png", 0, 100, 100, 100);
 		asteroid.setPosition(Double.parseDouble(packet[1]), Double.parseDouble(packet[2]));
@@ -1441,12 +1631,20 @@ public class GameRoomController implements Initializable {
 		asteroids.add(asteroid);
 	}
 
+	/**
+	 * start the pangpang game when finish preparing game
+	 * 
+	 * @param packet
+	 */
 	public void StartPrepareCompletePangPang(String[] packet) {
 		isPangPangStartPrepareFinish = Boolean.parseBoolean(packet[1]);
 		soundPangPangBackground.repeatStartMusic();
 		Platform.runLater(() -> displayText("Game Start!!"));
 	}
 
+	/**
+	 * init pangapng enemy
+	 */
 	public void initPangPangBubbles() {
 		for (int i = 0; i < Settings.nPangPangEnemyHeight; i++)
 			for (int j = 0; j < Settings.nPangPangEnemyWidth; j++) {
@@ -1458,12 +1656,21 @@ public class GameRoomController implements Initializable {
 
 	}
 
+	/**
+	 * start the meteor game when finish preparing game
+	 * 
+	 * @param packet
+	 */
 	public void StartPrepareCompleteMeteorGame(String[] packet) {
 		isMeteorGameStartPrepareFinish = Boolean.parseBoolean(packet[1]);
 		Platform.runLater(() -> displayText("Game Start!!"));
 	}
 
-	// 2 player name 3 position x 4 position y
+	/**
+	 * update meteor game player position
+	 * 
+	 * @param packet
+	 */
 	public void updateMeteorGamePlayerPosition(String[] packet) {
 		if (client.getClientName().equals(packet[1]))
 			return;
@@ -1474,6 +1681,11 @@ public class GameRoomController implements Initializable {
 			}
 	}
 
+	/**
+	 * update pangpang player position
+	 * 
+	 * @param packet
+	 */
 	public void updatePangPangPlayerPosition(String[] packet) {
 
 		for (int i = 0; i < pangPangPlayers.size(); i++)
@@ -1482,6 +1694,9 @@ public class GameRoomController implements Initializable {
 			}
 	}
 
+	/**
+	 * finish meteor game event
+	 */
 	public void setFinishMeteorGame() {
 		this.setGameStart(false);
 
@@ -1491,7 +1706,11 @@ public class GameRoomController implements Initializable {
 
 	};
 
-	// 2 player name 3 position x 4 position y
+	/**
+	 * delete astroid in meteor game
+	 * 
+	 * @param packet
+	 */
 	public void deleteMeteorGameMeteor(String[] packet) {
 
 		if (isMeteorGameStartPrepareFinish == false)
@@ -1787,6 +2006,9 @@ public class GameRoomController implements Initializable {
 		});
 	}
 
+	/**
+	 * processing pangapng enemy position
+	 */
 	public void pangPangEnemyPositionProcess() {
 		isPangPangEnemyStackRunning = true;
 		if (sPangPangEnemyStack != null) {
@@ -1807,12 +2029,23 @@ public class GameRoomController implements Initializable {
 		isPangPangEnemyStackRunning = false;
 	}
 
+	/**
+	 * if player life is zero or under zero. then this method is called for
+	 * deleting the player
+	 * 
+	 * @param packet
+	 */
 	public void pangpangPlayerRemove(String[] packet) {
 		for (int i = 0; i < pangPangPlayers.size(); i++)
 			if (pangPangPlayers.get(i).getsPlayerName().equals(packet[1]))
 				pangPangPlayers.remove(i);
 	}
 
+	/**
+	 * pangapng enemy delete when pangapng enemy's life under zero
+	 * 
+	 * @param packet
+	 */
 	public void pangpangEnemyRemove(String[] packet) {
 		for (int i = 0; i < bubbles.size(); i++) {
 			if (bubbles.get(i).getsPlayerName().equals(packet[1])) {
@@ -1833,6 +2066,11 @@ public class GameRoomController implements Initializable {
 		}
 	}
 
+	/**
+	 * update pangpang missile
+	 * 
+	 * @param packet
+	 */
 	public void pangpangMissileUpdate(String[] packet) {
 
 		for (int i = 0; i < pangPangPlayers.size(); i++)
@@ -1847,6 +2085,11 @@ public class GameRoomController implements Initializable {
 
 	}
 
+	/**
+	 * update enemy missile
+	 * 
+	 * @param packet
+	 */
 	public void enemyMissileUpdate(String[] packet) {
 
 		Enemy_Missile missile = new Enemy_Missile("/Asset/box.png", 100, 0, 100, 100, Double.parseDouble(packet[1]),
@@ -1857,8 +2100,12 @@ public class GameRoomController implements Initializable {
 
 	}
 
-	String temp;
+	// sending event
+	private String temp;
 
+	/**
+	 * pangapng receive enemy init event
+	 */
 	public void pangpangReceiveEnemyInit() {
 		String sPositionSet[] = temp.split(Settings.sPangPangPositionInformationWordToken);
 
@@ -1887,19 +2134,33 @@ public class GameRoomController implements Initializable {
 		}
 	}
 
+	/**
+	 * pangpang enemy init
+	 * 
+	 * @param packet
+	 */
 	public void pangpangEnemyInit(String[] packet) {
 
 		temp = packet[1];
 		isInit = true;
 	}
 
+	/**
+	 * pangpang enemy position update
+	 * 
+	 * @param packet
+	 */
 	public void pangpangEnemyPositionUpdate(String[] packet) {
 		// enemy Unit initialization part.
 		if (false == isPangPangEnemyStackRunning)
 			sPangPangEnemyStack = packet[1];
 	}
 
-	// player /x/y
+	/**
+	 * meteor game player who destroy asteroids increases size
+	 * 
+	 * @param packet
+	 */
 	public void meteorGamePlayerSizeUP(String[] packet) {
 		for (int i = 0; i < players.size(); i++)
 			if (players.get(i).getsPlayerName().equals(packet[1])) {
@@ -2120,10 +2381,20 @@ public class GameRoomController implements Initializable {
 		this.nCatchmeItem = nCatchmeItem;
 	}
 
+	/**
+	 * get init room number for accelerating processing speed
+	 * 
+	 * @return
+	 */
 	public long getnInitRoomNumber() {
 		return nInitRoomNumber;
 	}
 
+	/**
+	 * set init room number for accelerating processing speed
+	 * 
+	 * @param nInitRoomNumber
+	 */
 	public void setnInitRoomNumber(long nInitRoomNumber) {
 		this.nInitRoomNumber = nInitRoomNumber;
 	}

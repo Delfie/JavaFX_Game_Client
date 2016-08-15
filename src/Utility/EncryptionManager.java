@@ -134,7 +134,7 @@ public class EncryptionManager {
 		Key key;
 		Cipher c;
 		boolean ischeck = true;
-
+		
 		byte[] decValue = null;
 		while (ischeck) {
 			key = generateKey64bits();

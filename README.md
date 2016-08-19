@@ -2,11 +2,11 @@
 ####this project is made by j.r.c Jong Uk.
 ####this project's purpose is that service game client used by JavaFX_Game_Server.
 
-if you want to use this server.
+if you want to use this client.
 
 you must follow below steps.
 
-1.install or build the JavaFX_Game_Server.
+1.install or build the JavaFX_Game_Client.
 
 2.set ip address and port in Settings.java.
 

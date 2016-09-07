@@ -32,7 +32,7 @@ Demo 2.0.0v ( 2016. 08. 15 )
 <br></br>
 Step contribution
 ---
-1.Fork project ["**JavaFx_Game_Server**"](https://github.com/jrcforever/JavaFX_Game_Server)
+1.Fork project ["**JavaFx_Game_Client**"](https://github.com/jrcforever/JavaFX_Game_Client)
 
 2.Make one or more commented and clean commits to the repository. or Make a new branch and you can be modifying more than one feature.
 

@@ -1214,7 +1214,6 @@ public class GameRoomController implements Initializable {
 	 */
 	public void handleBtnCancel(ActionEvent event) {
 		client.sendPacket(Settings._REQUEST_OUT_OF_THE_ROOM + "", client.getClientName());
-
 	}
 
 	/**

@@ -178,8 +178,11 @@ public class ServerClient {
 				 * processing all packet using next method for splitting the
 				 * packet
 				 */
-				String[] multiplePackets = SplitPacketManager
-						.splitMultiplePacket(EncryptionManager.decrypt64bits(data));
+				String[] multiplePackets;
+				if (Settings.isTurnOnEncryption)
+					multiplePackets = SplitPacketManager.splitMultiplePacket(EncryptionManager.decrypt64bits(data));
+				else
+					multiplePackets = SplitPacketManager.splitMultiplePacket(data);
 
 				for (int i = 0; i < multiplePackets.length; i++) {
 
@@ -193,7 +196,10 @@ public class ServerClient {
 
 					if (protocol != Settings._ANSWER_GAME_ROOM_LIST && protocol != Settings._ANSWER_ROOM_MEMBER_NUMBER
 							&& protocol != Settings._ANSWER_PANGPANG_ENEMY_EVENT)
-						System.out.println("receive the Packet " + EncryptionManager.decrypt64bits(data));
+						if (Settings.isTurnOnEncryption)
+							System.out.println("receive the Packet " + EncryptionManager.decrypt64bits(data));
+						else
+							System.out.println("receive the Packet " + data);
 
 					switch (protocol) {
 					// if client exit the game room
@@ -465,8 +471,13 @@ public class ServerClient {
 			@Override
 			public void run() {
 				try {
-					byte[] byteArr = EncryptionManager.encrypt64bits(data).getBytes("UTF-8");
+					byte[] byteArr;
+					if (Settings.isTurnOnEncryption)
+						byteArr = EncryptionManager.encrypt64bits(data).getBytes("UTF-8");
+					else
+						byteArr = data.getBytes();
 					outputStream = socket.getOutputStream();
+
 					outputStream.write(byteArr);
 					outputStream.flush();
 					// System.out.println("[보내기 완료]");

@@ -49,7 +49,13 @@ Related project
 ---
 ["**JavaFx_Game_Server**"](https://github.com/jrcforever/JavaFX_Game_Server)
 ["**JavaFx_Game_Mobile**"](https://github.com/jrcforever/JavaFX_Game_Mobile)
+
   
+<br></br>
+Contributor
+---
+LOGO Designer : Im Jaeseong
+
   
 <br></br>
 Contact

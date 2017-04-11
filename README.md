@@ -1,6 +1,6 @@
 # JavaFX_Game_Client
-####this project is made by j.r.c Jong Uk.
-####this project's purpose is that service game client used by JavaFX_Game_Server.
+#### this project is made by j.r.c Jong Uk.
+#### this project's purpose is that service game client used by JavaFX_Game_Server.
 <br></br>
 License
 ---
